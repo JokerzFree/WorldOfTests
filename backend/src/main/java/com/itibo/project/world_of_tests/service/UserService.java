@@ -1,34 +1,17 @@
 package com.itibo.project.world_of_tests.service;
 
-import com.itibo.project.world_of_tests.entity.User;
-import com.itibo.project.world_of_tests.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.itibo.project.world_of_tests.model.User;
 
-import java.util.Arrays;
+import java.util.List;
 
-@Service
-@Transactional
-public class UserService implements UserDetailsService {
+public interface UserService {
+    List<User> getUsers();
 
-    @Autowired
-    private UserRepository userRepository;
+    User getUser(Long id);
 
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(s);
+    User createUser(User user);
 
-        if (user == null) {
-            throw new UnauthorizedUserException("User doesn't exist!");
-        }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(),
-                Arrays.asList(new SimpleGrantedAuthority(user.getRole().name())));
-    }
+    User findUserByEmail(String email);
+
+    User findUserByEmailAndPassword(String email, String password);
 }

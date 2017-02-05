@@ -1,11 +1,14 @@
 package com.itibo.project.world_of_tests.repository;
 
+import com.itibo.project.world_of_tests.model.User;
+import org.springframework.data.repository.CrudRepository;
 
-import com.itibo.project.world_of_tests.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import javax.transaction.Transactional;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByUsername(String username);
+@Transactional
+public interface UserRepository extends CrudRepository<User, Long> {
+
+    User findOneByEmail(String email);
+
+    User findOneByEmailAndPassword(String email, String password);
 }
