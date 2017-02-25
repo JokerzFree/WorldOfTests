@@ -1,81 +1,151 @@
 package com.itibo.project.world_of_tests.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = {"username"}))
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
+
     @NotNull
-    private String email;
+    @Size(min = 4, max = 30)
+    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
+    private String username;
+
     @NotNull
+    @Column(name = "password", length = 70)
     private String password;
-    private String firstname;
-    private String lastname;
 
+    @NotNull
+    @Size(min = 4, max = 30)
+    private String name;
 
-    public User() {
+    @Override
+    @JsonProperty("email")
+    public String getUsername() {
+        return username;
     }
 
-    public User(String email, String password, String firstname, String lastname) {
-        this.email = email;
-        this.password = password;
-        this.firstname = firstname;
-        this.lastname = lastname;
-    }
-
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        Role userRoles = this.getRole();
+        if(userRoles != null) {
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRoles.getRolename());
+            authorities.add(authority);
+        }
+        return authorities;
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstname='" + firstname + '\'' +
-                '}';
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return true;
+    }
+
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+            joinColumns        = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id",  referencedColumnName = "id")}
+    )
+    private Role role;
+
+    @Override
+    @JsonIgnore
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+
+        if (o instanceof User) {
+            final User other = (User) o;
+            return Objects.equal(getId(), other.getId())
+                    && Objects.equal(getUsername(), other.getUsername())
+                    && Objects.equal(getPassword(), other.getPassword())
+                    && Objects.equal(getRole().getRolename(), other.getRole().getRolename())
+                    && Objects.equal(isEnabled(), other.isEnabled());
+        }
+        return false;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId(), getUsername(), getPassword(), getRole().getRolename(), isEnabled());
     }
 }

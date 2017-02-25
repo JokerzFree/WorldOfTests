@@ -1,17 +1,15 @@
 package com.itibo.project.world_of_tests.service;
 
+
+import com.itibo.project.world_of_tests.dto.UserDTO;
 import com.itibo.project.world_of_tests.model.User;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface UserService {
-    List<User> getUsers();
+public interface UserService extends org.springframework.security.core.userdetails.UserDetailsService {
 
-    User getUser(Long id);
+    User update(User user, UserDTO params);
+    Optional<User> findUser(Long id);
+    User createUser(UserDTO userDTO);
 
-    User createUser(User user);
-
-    User findUserByEmail(String email);
-
-    User findUserByEmailAndPassword(String email, String password);
 }
