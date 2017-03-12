@@ -13,6 +13,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 @Entity
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = {"username"}))
@@ -24,7 +25,6 @@ public class User implements UserDetails {
 
     @NotNull
     @Size(min = 4, max = 30)
-    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
     private String username;
 
     @NotNull
@@ -33,10 +33,18 @@ public class User implements UserDetails {
 
     @NotNull
     @Size(min = 4, max = 30)
+    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
+    private String email;
+
+    @NotNull
+    @Size(min = 4, max = 30)
     private String name;
 
+    @NotNull
+    private Date birthday;
+
     @Override
-    @JsonProperty("email")
+    @JsonProperty("username")
     public String getUsername() {
         return username;
     }
@@ -72,6 +80,21 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
 
     @Override
     @JsonIgnore

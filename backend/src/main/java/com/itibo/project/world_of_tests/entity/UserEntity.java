@@ -1,4 +1,4 @@
-package com.itibo.project.world_of_tests.dto;
+package com.itibo.project.world_of_tests.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,24 +11,35 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
 
 
-public final class UserDTO {
+public final class UserEntity {
 
     private static final String ROLE_USER = "ROLE_USER";
 
-    private final String email;
+    private final String username;
     @Size(min = 8, max = 100)
     private final String password;
+    private final String email;
     private final String name;
+    private final Date birthday;
 
-    public UserDTO(@JsonProperty("email") String email,
-                   @JsonProperty("password") String password,
-                   @JsonProperty("name") String name) {
-        this.email = email;
+    public UserEntity(@JsonProperty("username") String username,
+                      @JsonProperty("password") String password,
+                      @JsonProperty("email") String email,
+                      @JsonProperty("name") String name,
+                      @JsonProperty("birthday") Date birthday) {
+        this.username = username;
         this.password = password;
+        this.email = email;
         this.name = name;
+        this.birthday = birthday;
+    }
+
+    public Optional<String> getUsername() {
+        return Optional.ofNullable(username);
     }
 
     public Optional<String> getEmail() {
@@ -43,17 +54,23 @@ public final class UserDTO {
         return Optional.ofNullable(name);
     }
 
+    public Optional<Date> getBirthday() {
+        return Optional.ofNullable(birthday);
+    }
+
     public User toUser() {
         User user = new User();
-        user.setUsername(email);
+        user.setUsername(username);
         user.setRole(new Role());
         user.setPassword(new BCryptPasswordEncoder().encode(password));
+        user.setEmail(email);
         user.setName(name);
+        user.setBirthday(birthday);
         return user;
     }
 
     public UsernamePasswordAuthenticationToken toAuthenticationToken() {
-        return new UsernamePasswordAuthenticationToken(email, password, getAuthorities());
+        return new UsernamePasswordAuthenticationToken(username, password, getAuthorities());
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {

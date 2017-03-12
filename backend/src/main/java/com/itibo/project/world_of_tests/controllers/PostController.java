@@ -1,6 +1,7 @@
 package com.itibo.project.world_of_tests.controllers;
 
-import com.itibo.project.world_of_tests.dto.PostDTO;
+import com.itibo.project.world_of_tests.entity.PostEntity;
+import com.itibo.project.world_of_tests.helpers.CurrentUser;
 import com.itibo.project.world_of_tests.model.Post;
 import com.itibo.project.world_of_tests.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PostController {
 
     private final PostService postService;
+    private final CurrentUser currentUser;
 
     @Autowired
-    public PostController(PostService postService){
+    public PostController(PostService postService, CurrentUser currentUser){
         this.postService = postService;
+        this.currentUser = currentUser;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -35,10 +39,10 @@ public class PostController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<String> addNewPost(@RequestBody PostDTO postDTO) {
-        Post post = toPost(postDTO);
+    public ResponseEntity<String> addNewPost(@RequestBody PostEntity postEntity) {
+        Post post = toPost(postEntity);
         postService.save(post);
-        return new ResponseEntity<>(postDTO.getTitle(), HttpStatus.CREATED);
+        return new ResponseEntity<>(postEntity.getTitle(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -47,13 +51,13 @@ public class PostController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    private Post toPost(PostDTO postDTO) {
+    private Post toPost(PostEntity postEntity) {
         Post post = new Post();
-        post.setTitle(postDTO.getTitle());
-        post.setSubtitle(postDTO.getSubtitle());
-        post.setContent(postDTO.getContent());
+        post.setTitle(postEntity.getTitle());
+        post.setSubtitle(postEntity.getSubtitle());
+        post.setContent(postEntity.getContent());
         post.setDate(LocalDate.now().toString());
-        post.setAuthor(postDTO.getAuthor());
+        post.setAuthor(currentUser.getCurrentUser().getId());
         return post;
     }
 

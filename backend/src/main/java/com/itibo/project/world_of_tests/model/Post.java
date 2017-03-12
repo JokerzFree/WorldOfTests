@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "post")
+@Table(name = "posts")
 public class Post implements Serializable {
 
     @Id
@@ -27,7 +27,7 @@ public class Post implements Serializable {
     private String date;
 
     @Column(name = "author", length = 50)
-    private String author;
+    private Long author;
 
     @OneToMany
     @JoinColumn(name = "post_id", referencedColumnName = "id")
@@ -36,7 +36,7 @@ public class Post implements Serializable {
     public Post() {
     }
 
-    public Post(String title, String subtitle, String content, String date, String author) {
+    public Post(String title, String subtitle, String content, String date, Long author) {
         this.title = title;
         this.subtitle = subtitle;
         this.content = content;
@@ -84,11 +84,11 @@ public class Post implements Serializable {
         this.date = date;
     }
 
-    public String getAuthor() {
+    public Long getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Long author) {
         this.author = author;
     }
 

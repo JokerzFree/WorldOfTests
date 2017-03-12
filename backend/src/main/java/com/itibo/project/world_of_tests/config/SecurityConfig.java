@@ -17,6 +17,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 @Configuration
@@ -39,19 +42,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable();
 
-        //h2 database console
-        http.headers().frameOptions().disable();
-
         http.exceptionHandling()
             .and().anonymous()
             .and().servletApi()
             .and().headers().cacheControl();
 
         http.authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/posts/**").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/api/users").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/console/**").permitAll();
+                .antMatchers(HttpMethod.GET, "/api/quizzes/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/quizzes/**").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/users/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/users/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/users/**").permitAll();
 
         http.addFilterBefore(
                 new StatelessLoginFilter("/api/login", tokenAuthenticationService, userService, authenticationManager()),

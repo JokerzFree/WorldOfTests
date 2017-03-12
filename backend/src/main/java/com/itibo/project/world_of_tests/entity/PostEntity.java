@@ -1,18 +1,18 @@
-package com.itibo.project.world_of_tests.dto;
+package com.itibo.project.world_of_tests.entity;
 
 import java.io.Serializable;
 
-public class PostDTO implements Serializable {
+public class PostEntity implements Serializable {
     private Long id;
     private String title;
     private String subtitle;
     private String content;
     private String date;
-    private String author;
+    private Long author;
 
-    public PostDTO() {}
+    public PostEntity() {}
 
-    public PostDTO(Long id, String title, String subtitle, String content, String date, String author) {
+    public PostEntity(Long id, String title, String subtitle, String content, String date, Long author) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -61,11 +61,11 @@ public class PostDTO implements Serializable {
         this.date = date;
     }
 
-    public String getAuthor() {
+    public Long getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Long author) {
         this.author = author;
     }
 }
