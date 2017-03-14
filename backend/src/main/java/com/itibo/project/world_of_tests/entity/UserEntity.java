@@ -25,17 +25,20 @@ public final class UserEntity {
     private final String email;
     private final String name;
     private final Date birthday;
+    private final String avatar;
 
     public UserEntity(@JsonProperty("username") String username,
                       @JsonProperty("password") String password,
                       @JsonProperty("email") String email,
                       @JsonProperty("name") String name,
-                      @JsonProperty("birthday") Date birthday) {
+                      @JsonProperty("birthday") Date birthday,
+                      @JsonProperty("avatar") String avatar) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
         this.birthday = birthday;
+        this.avatar = avatar;
     }
 
     public Optional<String> getUsername() {
@@ -58,6 +61,10 @@ public final class UserEntity {
         return Optional.ofNullable(birthday);
     }
 
+    public Optional<String> getAvatar() {
+        return Optional.ofNullable(avatar);
+    }
+
     public User toUser() {
         User user = new User();
         user.setUsername(username);
@@ -66,6 +73,7 @@ public final class UserEntity {
         user.setEmail(email);
         user.setName(name);
         user.setBirthday(birthday);
+        user.setAvatar(avatar);
         return user;
     }
 

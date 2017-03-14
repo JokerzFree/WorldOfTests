@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface UserService extends org.springframework.security.core.userdetails.UserDetailsService {
     List<User> findAll();
     User update(User user, UserEntity params);
+    User updateAvatar(User user, String avatar);
     User findUser(Long id);
     Optional<User> findUser(String username);
     User createUser(UserEntity userEntity);

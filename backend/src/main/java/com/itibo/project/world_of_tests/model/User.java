@@ -43,6 +43,9 @@ public class User implements UserDetails {
     @NotNull
     private Date birthday;
 
+    @NotNull
+    private String avatar;
+
     @Override
     @JsonProperty("username")
     public String getUsername() {
@@ -94,6 +97,14 @@ public class User implements UserDetails {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override

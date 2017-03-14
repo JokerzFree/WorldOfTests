@@ -57,8 +57,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    //@RequestHeader(value="x-auth-token") String xAuthToken
     public ResponseEntity<User> getCurrentUser() {
+        return new ResponseEntity<>(currentUser.getCurrentUser(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResponseEntity<User> update(@Valid @RequestBody UserEntity params) {
+        User user = currentUser.getCurrentUser();
+        userService.update(user, params);
         return new ResponseEntity<>(currentUser.getCurrentUser(), HttpStatus.OK);
     }
 

@@ -44,6 +44,13 @@ public class UserServiceImpl implements UserService  {
         params.getEmail().ifPresent(user::setUsername);
         params.getEncodedPassword().ifPresent(user::setPassword);
         params.getName().ifPresent(user::setName);
+        params.getAvatar().ifPresent(user::setAvatar);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateAvatar(User user, String avatar){
+        user.setAvatar(avatar);
         return userRepository.save(user);
     }
 
@@ -71,6 +78,7 @@ public class UserServiceImpl implements UserService  {
     @Override
     public User createUser(UserEntity userEntity) {
         User user = toUserRole(userEntity);
+        user.setAvatar("none.png");
         return userRepository.save(user);
     }
 
