@@ -3,6 +3,7 @@ package com.itibo.project.world_of_tests.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import com.itibo.project.world_of_tests.annotations.Info;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,10 +12,18 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
+@Info(
+        classType = Info.ClassType.Model,
+        description = "User Model",
+        createdBy = "JokerZ",
+        lastModified = "21.03.2017"
+)
 @Entity
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = {"username"}))
 public class User implements UserDetails {
@@ -45,6 +54,13 @@ public class User implements UserDetails {
 
     @NotNull
     private String avatar;
+
+    @Column(name = "lastLoginTime", columnDefinition="DATETIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginTime;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "author")
+    private Set<Post> post;
 
     @Override
     @JsonProperty("username")
@@ -105,6 +121,21 @@ public class User implements UserDetails {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    @JsonIgnore
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    @JsonProperty("lastLoginTime")
+    public LocalDateTime getConvertedTime(){
+        LocalDateTime llt = LocalDateTime.ofInstant(lastLoginTime.toInstant(), ZoneId.systemDefault());
+        return llt;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.itibo.project.world_of_tests.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itibo.project.world_of_tests.annotations.Info;
 import com.itibo.project.world_of_tests.model.Role;
 import com.itibo.project.world_of_tests.model.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +15,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 
-
+@Info(
+        classType = Info.ClassType.Entity,
+        description = "Entity for User Table",
+        createdBy = "JokerZ",
+        lastModified = "21.03.2017"
+)
 public final class UserEntity {
 
     private static final String ROLE_USER = "ROLE_USER";

@@ -22,9 +22,6 @@ public class Comment implements Serializable {
     @Column(name = "date")
     private String date;
 
-    @Column(name = "post_id")
-    private Long postId;
-
     public Comment() {
     }
 
@@ -66,14 +63,6 @@ public class Comment implements Serializable {
         this.date = date;
     }
 
-    public Long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,13 +71,12 @@ public class Comment implements Serializable {
         return Objects.equals(id, comment.id) &&
                 Objects.equals(author, comment.author) &&
                 Objects.equals(review, comment.review) &&
-                Objects.equals(date, comment.date) &&
-                Objects.equals(postId, comment.postId);
+                Objects.equals(date, comment.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, author, review, date, postId);
+        return Objects.hash(id, author, review, date);
     }
 
     @Override
@@ -98,7 +86,6 @@ public class Comment implements Serializable {
                 ", author='" + author + '\'' +
                 ", review='" + review + '\'' +
                 ", date='" + date + '\'' +
-                ", postId=" + postId +
                 '}';
     }
 }

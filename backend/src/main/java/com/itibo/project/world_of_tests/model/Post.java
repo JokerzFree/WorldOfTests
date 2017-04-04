@@ -1,5 +1,10 @@
 package com.itibo.project.world_of_tests.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itibo.project.world_of_tests.repository.UserRepository;
+import com.itibo.project.world_of_tests.service.UserService;
+import com.itibo.project.world_of_tests.service.UserServiceImpl;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -26,17 +31,14 @@ public class Post implements Serializable {
     @Column(name = "date", length = 50)
     private String date;
 
-    @Column(name = "author", length = 50)
-    private Long author;
-
-    @OneToMany
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
-    private List<Comment> commentList;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
     public Post() {
     }
 
-    public Post(String title, String subtitle, String content, String date, Long author) {
+    public Post(String title, String subtitle, String content, String date, User author) {
         this.title = title;
         this.subtitle = subtitle;
         this.content = content;
@@ -84,20 +86,12 @@ public class Post implements Serializable {
         this.date = date;
     }
 
-    public Long getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Long author) {
+    public void setAuthor(User author) {
         this.author = author;
-    }
-
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
     }
 
     @Override
@@ -110,19 +104,17 @@ public class Post implements Serializable {
                 Objects.equals(subtitle, post.subtitle) &&
                 Objects.equals(content, post.content) &&
                 Objects.equals(date, post.date) &&
-                Objects.equals(author, post.author) &&
-                Objects.equals(commentList, post.commentList);
+                Objects.equals(author, post.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, subtitle, content, date, author, commentList);
+        return Objects.hash(id, title, subtitle, content, date, author);
     }
 
     @Override
     public String toString() {
         return "Post{" +
-                "commentList=" + commentList +
                 ", author='" + author + '\'' +
                 ", date='" + date + '\'' +
                 ", content='" + content + '\'' +

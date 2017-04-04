@@ -57,7 +57,7 @@ public class PostController {
         post.setSubtitle(postEntity.getSubtitle());
         post.setContent(postEntity.getContent());
         post.setDate(LocalDate.now().toString());
-        post.setAuthor(currentUser.getCurrentUser().getId());
+        post.setAuthor(currentUser.getCurrentUser());
         return post;
     }
 

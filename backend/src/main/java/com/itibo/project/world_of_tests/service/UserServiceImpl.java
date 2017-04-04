@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +54,12 @@ public class UserServiceImpl implements UserService  {
     @Override
     public User updateAvatar(User user, String avatar){
         user.setAvatar(avatar);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateLastLoginTime(User user, String timeZoneOffset){
+        user.setLastLoginTime(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         return userRepository.save(user);
     }
 
