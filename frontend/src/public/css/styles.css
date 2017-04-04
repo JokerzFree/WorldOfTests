@@ -1,0 +1,38 @@
+/* ADD STYLE FOR CENTER BASED ORINTIER */
+.pull-center{
+	float: inherit;
+}
+
+/*AVATAR UPLOAD VIEW*/
+.image-upload
+{
+	height: 150px;
+}
+.image-upload > input
+{
+    display: none;
+}
+
+.image-upload label
+{
+	display: initial;
+}
+
+.image-upload img
+{
+    height: 100%;
+    cursor: pointer;
+}
+
+
+/*STICK FOOTER FIX*/
+body {
+  margin-bottom: 30px;
+}
+
+.footer {
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  background-color: #f5f5f5;
+}

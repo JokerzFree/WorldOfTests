@@ -1,0 +1,56 @@
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#menu-header">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Quizzes</a>
+        </div>
+        <div class="collapse navbar-collapse" id="menu-header">
+        	<ul class="nav navbar-nav navbar-left">
+                <li>
+                    <a [routerLink]="['/posts']">{{ "create" | translate }}</a>
+                </li>
+                <li>
+                    <a [routerLink]="['/posts']">{{ "explore" | translate }}</a>
+                </li>
+                <li>
+                    <a [routerLink]="['/about']">{{ "about" | translate }}</a>
+                </li>
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ "admin" | translate }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                    	<li><a [routerLink]="['/people']">{{ "people" | translate }}</a></li>
+                        <li><a [routerLink]="['/add']">{{ "new_post" | translate }}</a></li>
+                    </ul>
+                </li>
+        	</ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ "language" | translate }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a (click)="changeLang('en')">EN</a></li>
+                        <li><a (click)="changeLang('ru')">RU</a></li>
+                    </ul>
+                </li>
+                <li *ngIf="!isSignedIn">
+                    <a [routerLink]="['/register']"><span class="glyphicon glyphicon-user"></span>{{ "register" | translate }}</a>
+                </li>
+                <li *ngIf="!isSignedIn">
+                    <a [routerLink]="['/login']"><span class="glyphicon glyphicon-log-in"></span>{{ "login" | translate }}</a>
+                </li>
+                <li *ngIf="isSignedIn" class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ "profile" | translate }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a [routerLink]="['/profile']">{{ "profile" | translate }}</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" (click)="logout(); $event.preventDefault()">{{ "logout" | translate }}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

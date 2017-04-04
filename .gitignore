@@ -1,5 +1,7 @@
 backend/.idea
 backend/backend.iml
+backend/target
+backend/upload-dir
 frontend/node_modules
 
 # Windows image file caches

@@ -1,0 +1,10 @@
+{
+    "posts" : "Posts",
+    "new_post" : "New Post",
+    "about" : "About",
+    "login" : "Log in",
+    "register": "Register",
+    "profile": "Profile",
+    "logout": "Log out",
+    "language": "Language"
+}

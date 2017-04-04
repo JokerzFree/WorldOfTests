@@ -1,0 +1,54 @@
+<div class="container" *ngIf="user">
+    <div class="register jumbotron center-block">
+        <form (ngSubmit)="register()">
+            <h1>{{ "registration" | translate }}</h1>
+            <div class="form-group">
+                <label for="username">{{ "username" | translate }}</label>
+                <input type="text" id="username" name="username" class="form-control"
+                       required #username="ngModel" [rangeLength]="[4, 30]" [(ngModel)]="user.username">
+                <div *ngIf="username.errors && (username.dirty || username.touched)" class="alert alert-danger" role="alert"> 
+                    <p *ngIf="username.errors?.required">{{ "error_username_required" | translate }}</p>
+                    <p *ngIf="username.errors?.rangeLength">{{ "error_range" | translate }}: 4 (30)</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">{{ "email" | translate }}</label>
+                <input type="text" id="email" name="email" class="form-control" [(ngModel)]="user.email" #email="ngModel" required email/>
+                <div *ngIf="email.errors && (email.dirty || email.touched)" class="alert alert-danger" role="alert">
+                    <p *ngIf="email.errors?.required">{{ "error_email_required" | translate }}</p>
+                    <p *ngIf="email.errors?.email">{{ "error_email_format" | translate }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">{{ "password" | translate }}</label>
+                <input type="password" [(ngModel)]="user.password" id="password" name="password" class="form-control" #password="ngModel" [rangeLength]="[8, 18]" required/>
+                <div *ngIf="password.errors && (password.dirty || password.touched)" class="alert alert-danger" role="alert">
+                    <p *ngIf="password.errors?.required">{{ "error_password_required" | translate }}</p>
+                    <p *ngIf="password.errors?.rangeLength">{{ "error_range" | translate }}: 8 (18)</p>
+                </div>
+                <label for="certainPassword">{{ "confirm_password" | translate }}</label>
+                <input type="password" ngModel id="certainPassword" name="certainPassword" class="form-control" #certainPassword="ngModel" [equalTo]="password"/>
+                <div *ngIf="certainPassword.errors && (certainPassword.dirty || certainPassword.touched)" class="alert alert-danger" role="alert">
+                    <p *ngIf="certainPassword.errors?.equalTo">{{ "error_password_missmatch" | translate }}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name">{{ "name" | translate }}</label>
+                <input type="text" id="name" name="name" class="form-control" required #name="ngModel" [rangeLength]="[4, 30]" [(ngModel)]="user.name">
+                <div *ngIf="name.errors && (name.dirty || name.touched)" class="alert alert-danger" role="alert">
+                    <p *ngIf="name.errors?.required">{{ "error_name_required" | translate }}</p>
+                    <p *ngIf="name.errors?.rangeLength">{{ "error_range" | translate }}: 4 (30)</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="birthday">{{ "birthday" | translate }}</label>
+                <input type="date" id="birthday" name="birthday" class="form-control" [(ngModel)]="user.birthday" #birthday="ngModel" required date/>
+                <div *ngIf="birthday.errors && (birthday.dirty || birthday.touched)" class="alert alert-danger" role="alert">
+                    <p *ngIf="birthday.errors?.required">{{ "error_birthday_required" | translate }}</p>
+                    <p *ngIf="birthday.errors?.date">{{ "error_date" | translate }}</p>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary">{{ "confirm" | translate }}</button>
+        </form>
+    </div>
+</div>

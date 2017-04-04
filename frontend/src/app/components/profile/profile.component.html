@@ -1,0 +1,15 @@
+<article *ngIf="user">
+	<div class="image-upload">
+	    <label for="avatar-input">
+	        <img src="{{ image }}"/>
+	    </label>
+	    <input id="avatar-input" type="file" (change)="update($event)" />
+	</div>
+    <h1>{{ user.username }}</h1>
+    <h1>{{ user.email }}</h1>
+    <h1>{{ user.name }}</h1>
+    <h1>{{ user.birthday }}</h1>
+    <h1>Last login time: {{user.lastLoginTime.dayOfMonth}}.{{user.lastLoginTime.monthValue}}.{{user.lastLoginTime.year}} {{user.lastLoginTime.hour}}:{{user.lastLoginTime.minute}}</h1>
+</article>
+
+

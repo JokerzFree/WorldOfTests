@@ -1,0 +1,45 @@
+{
+    "posts" : "Posts",
+    "new_post" : "New Post",
+    "posted": "Posted by",
+    "title": "Title",
+    "subtitle": "SubTitle",
+    "content": "Content",
+    "save": "Save",
+    "post_success": "Success! Your post was added.",
+    "post_error": "Something happend and post not added..",
+
+    "about" : "About",
+
+    "profile": "Profile",
+    "logout": "Log out",
+    "language": "Language",
+    "admin": "Admin",
+    "create": "Create",
+    "explore": "Explore",
+    "people": "People",
+
+    "confirm": "Confirm",
+    "signin": "Sign in",
+    "login" : "Log in",
+    "success": "Success",
+
+    "register": "Register",
+    "registration": "Registration",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "name": "Name",
+    "birthday": "Birthday",
+
+    "error_username_required": "Username required",
+    "error_email_required": "Email required",
+    "error_email_format": "Wrong email format",
+    "error_password_required": "Password required",
+    "error_password_missmatch": "Passwords didnt match",
+    "error_name_required": "Name required",
+    "error_birthday_required": "Birthday required",
+    "error_range": "Range must be between from (to):",
+    "error_date": "Wrong date format"
+}
