@@ -16,7 +16,8 @@ export class LoginService {
         return this.http.post('http://localhost:8080/api/login', loginRequest, { headers: headers })
                         .do(resp => {
                             localStorage.setItem('jwt', resp.headers.get('x-auth-token'));
-                        });
+                        })
+                        .catch((error:any) => this.handleError(error));
     }
 
     logout():void {
@@ -25,11 +26,11 @@ export class LoginService {
 
     private handleError(error:Response) {
         console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+        return Observable.throw(error.json().message || 'Server error');
     }
 
 
-     isSignedIn():boolean {
+    isSignedIn():boolean {
         return localStorage.getItem('jwt') !== null;
     }
 

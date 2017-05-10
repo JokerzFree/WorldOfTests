@@ -41,5 +41,10 @@
     "error_name_required": "Введите настоящее имя",
     "error_birthday_required": "Введите дату рождения",
     "error_range": "Количество символов должно быть в пределах от (до):",
-    "error_date": "Неправильный формат даты"
+    "error_date": "Неправильный формат даты",
+    
+    "quiz-title": "Название",
+    "quiz-description": "Описание",
+    "quiz-settings": "Настройки",
+    "question-add": "Добавить вопрос"
 }

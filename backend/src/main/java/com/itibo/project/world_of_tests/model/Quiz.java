@@ -1,5 +1,6 @@
 package com.itibo.project.world_of_tests.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -23,15 +24,30 @@ public class Quiz implements Serializable {
 
     @NotNull
     @NotEmpty
-    @Size(max = 50)
     @Column(name = "title", length = 50)
     private String title;
+
+    @NotNull
+    @NotEmpty
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 
     @Column(name = "date", length = 50)
     private String date;
 
-    @Column(name = "author", length = 50)
-    private Long author;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+
+    @NotNull
+    @NotEmpty
+    @Column(name = "json_quiz", columnDefinition = "JSON")
+    private String json_quiz;
+
+    @NotNull
+    @NotEmpty
+    @Column(name ="json_answer", columnDefinition = "JSON")
+    private String json_answer;
 
     @OneToMany
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
@@ -41,12 +57,14 @@ public class Quiz implements Serializable {
 
     }
 
-    public Quiz(Long id, String title, String date, Long author, List<Comment> commentList){
+    public Quiz(Long id, String title, String date, User author, List<Comment> commentList, String json_quiz, String json_answer){
         this.id = id;
         this.title = title;
         this.date = date;
         this.author = author;
         this.commentList = commentList;
+        this.json_quiz = json_quiz;
+        this.json_answer = json_answer;
     }
 
     public Long getId() {
@@ -73,11 +91,11 @@ public class Quiz implements Serializable {
         this.date = date;
     }
 
-    public Long getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Long author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
@@ -87,6 +105,31 @@ public class Quiz implements Serializable {
 
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getJson_quiz() {
+        return json_quiz;
+    }
+
+    public void setJson_quiz(String json_quiz) {
+        this.json_quiz = json_quiz;
+    }
+
+    public String getJson_answer() {
+        return json_answer;
+    }
+
+    @JsonIgnore
+    public void setJson_answer(String json_answer) {
+        this.json_answer = json_answer;
     }
 
     @Override

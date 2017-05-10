@@ -1,5 +1,6 @@
 package com.itibo.project.world_of_tests.storage;
 
+import com.itibo.project.world_of_tests.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -17,26 +18,27 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.stream.Stream;
 
-/**
- * Created by Andrew on 12.03.2017.
- */
 @Service
 public class StorageServiceImpl implements StorageService {
 
     private final Path rootLocation;
+    private final StorageProperties storageProperties;
 
     @Autowired
     public StorageServiceImpl(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
+        this.storageProperties = properties;
     }
 
     @Override
-    public void store(MultipartFile file, String filename) {
+    public void store(User user, MultipartFile file, String filename) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
-            Files.copy(file.getInputStream(), this.rootLocation.resolve(filename));
+            Path path = getPathToUserFolder(user);
+            initUserFolder(path);
+            Files.copy(file.getInputStream(), path.resolve(filename));
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
         }
@@ -55,19 +57,21 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Path load(String filename) {
-        return rootLocation.resolve(filename);
+    public Path load(User user, String filename) {
+        if (filename.equals("none.png")){
+            return getPathToCommonFolder().resolve(filename);
+        }
+        return getPathToUserFolder(user).resolve(filename);
     }
 
     @Override
-    public Resource loadAsResource(String filename) {
+    public Resource loadAsResource(User user, String filename) {
         try {
-            Path file = load(filename);
+            Path file = load(user, filename);
             Resource resource = new UrlResource(file.toUri());
-            if(resource.exists() || resource.isReadable()) {
+            if (resource.exists() || resource.isReadable()) {
                 return resource;
-            }
-            else {
+            } else {
                 throw new StorageFileNotFoundException("Could not read file: " + filename);
             }
         } catch (MalformedURLException e) {
@@ -87,5 +91,24 @@ public class StorageServiceImpl implements StorageService {
         } catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }
+    }
+
+    @Override
+    public void initUserFolder(Path path) {
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new StorageException("Could not initialize storage", e);
+        }
+    }
+
+    @Override
+    public Path getPathToCommonFolder(){
+        return Paths.get(storageProperties.getLocation());
+    }
+
+    @Override
+    public Path getPathToUserFolder(User user) {
+        return Paths.get(storageProperties.getLocation() + "/" + user.getUsername());
     }
 }

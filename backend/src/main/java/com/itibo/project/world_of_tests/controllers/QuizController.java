@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Andrew on 26.02.2017.
@@ -57,11 +58,20 @@ public class QuizController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/check", method = RequestMethod.POST)
+    public ResponseEntity<Boolean> checkQuizById(@RequestBody Map<String, String> params){
+        Boolean result = quizService.checkQuizById(Long.parseLong(params.get("id")), params.get("answers"));
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     private Quiz toQuiz(QuizEntity quizEntity) {
         Quiz quiz = new Quiz();
         quiz.setTitle(quizEntity.getTitle());
-        quiz.setDate(quizEntity.getDate());
-        quiz.setAuthor(currentUser.getCurrentUser().getId());
+        quiz.setDescription(quizEntity.getDescription());
+        quiz.setDate(LocalDate.now().toString());
+        quiz.setAuthor(currentUser.getCurrentUser());
+        quiz.setJson_quiz(quizEntity.getJson_quiz());
+        quiz.setJson_answer(quizEntity.getJson_answer());
         return quiz;
     }
 }

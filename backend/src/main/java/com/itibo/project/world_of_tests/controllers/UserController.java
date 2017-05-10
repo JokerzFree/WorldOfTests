@@ -6,6 +6,7 @@ import com.itibo.project.world_of_tests.helpers.CurrentUser;
 import com.itibo.project.world_of_tests.model.User;
 import com.itibo.project.world_of_tests.repository.UserRepository;
 import com.itibo.project.world_of_tests.security.JwtTokenHandler;
+import com.itibo.project.world_of_tests.service.RoleService;
 import com.itibo.project.world_of_tests.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,12 +18,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-@Info(
-        classType = Info.ClassType.Controller,
-        description = "RestController for requests on /api/users path",
-        createdBy = "JokerZ",
-        lastModified = "21.03.2017"
-)
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -30,13 +25,15 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final UserService userService;
+    private final RoleService roleService;
     private final JwtTokenHandler jwtTokenHandler;
     private final CurrentUser currentUser;
 
     @Autowired
-    public UserController(UserRepository userRepository, UserService userService, JwtTokenHandler jwtTokenHandler, CurrentUser currentUser) {
+    public UserController(UserRepository userRepository, UserService userService, RoleService roleService, JwtTokenHandler jwtTokenHandler, CurrentUser currentUser) {
         this.userRepository = userRepository;
         this.userService = userService;
+        this.roleService = roleService;
         this.jwtTokenHandler = jwtTokenHandler;
         this.currentUser = currentUser;
     }
@@ -81,9 +78,9 @@ public class UserController {
         return new ResponseEntity(headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/admin/deleteUser", method = RequestMethod.DELETE)
-    public ResponseEntity deleteUser(@RequestParam Map<String, String> params) {
-        userService.deleteUser(Long.parseLong(params.get("id")));
+    @RequestMapping(value = "/admin/deleteUser/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity(headers, HttpStatus.OK);
     }
@@ -95,8 +92,8 @@ public class UserController {
         return new ResponseEntity(headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/admin/deleteUserRole", method = RequestMethod.POST)
-    public ResponseEntity deleteUserRole(@RequestParam Map<String, String> params) {
+    @RequestMapping(value = "/admin/deleteUserRole/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteUserRole(@PathVariable Long id) {
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity(headers, HttpStatus.OK);
     }

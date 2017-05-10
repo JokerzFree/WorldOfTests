@@ -27,9 +27,14 @@ export class UserService {
                         .catch(this.handleError);
     }
 
-    getUser(id:any):Observable<User> {
-        return this.http.get(this.url + "/" + id, {headers: this.prepareHeaders()})
+    getUser(userId:any):Observable<User> {
+        return this.http.get(this.url + "/" + userId, {headers: this.prepareHeaders()})
                         .map(res => res.json())
+                        .catch(this.handleError);
+    }
+
+    deleteUser(userId:number) {
+        return this.http.delete(this.url + "/admin/deleteUser/" + userId, {headers: this.prepareHeaders()})
                         .catch(this.handleError);
     }
 
@@ -39,9 +44,27 @@ export class UserService {
     }
 
     setLastLoginTime() {
-        var timeZoneOffset = new Date().getTimezoneOffset();
+        let timeZoneOffset = new Date().getTimezoneOffset();
         return this.http.post(this.url+"/lastLoginTime", JSON.stringify({offset:timeZoneOffset}), {headers: this.prepareHeaders()})
                         .catch(this.handleError);
+    }
+
+    hasRole(roles:string[]){
+        let currentUser: User;
+        this.getCurrentUser().subscribe(
+            user => {
+                currentUser = user;
+            }
+        );
+        let access: boolean = false;
+        for (var i = 0, length1 = roles.length; i < length1; i++){
+            for (var j = 0, length2 = currentUser.roles.length; j < length2; j++){
+                if (roles[i] == currentUser.roles[j].rolename){
+                    access = true;
+                }
+            }
+        }
+        return access;
     }
 
     prepareHeaders(){

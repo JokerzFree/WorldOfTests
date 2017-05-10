@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit {
         this.userService.getCurrentUser().subscribe(
             user => {
                 this.user = user;
-                this.uploadService.getImage(this.user.avatar)
+                this.uploadService.getImage(this.user.id, this.user.avatar)
                     .subscribe((file) => {
                         this.image = file;
                     });

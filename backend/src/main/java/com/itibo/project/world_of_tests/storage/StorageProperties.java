@@ -2,9 +2,6 @@ package com.itibo.project.world_of_tests.storage;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * Created by Andrew on 12.03.2017.
- */
 @ConfigurationProperties("storage")
 public class StorageProperties {
 

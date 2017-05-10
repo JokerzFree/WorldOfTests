@@ -41,5 +41,10 @@
     "error_name_required": "Name required",
     "error_birthday_required": "Birthday required",
     "error_range": "Range must be between from (to):",
-    "error_date": "Wrong date format"
+    "error_date": "Wrong date format",
+
+    "quiz-title": "Title",
+    "quiz-description": "Description",
+    "quiz-settings": "Settings",
+    "question-add": "Add question"
 }

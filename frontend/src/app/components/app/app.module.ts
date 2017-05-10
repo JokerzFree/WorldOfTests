@@ -9,6 +9,8 @@ import {TranslateModule} from "ng2-translate";
 import {CKEditorModule} from 'ng2-ckeditor';
 
 import {AuthGuard} from '../../services/auth-guard';
+import {UserService} from '../../services/user.service';
+import {LoginService} from '../../services/login.service';
 
 import {HeaderComponent}  from '../header/header.component';
 import {FooterComponent}  from '../footer/footer.component';
@@ -16,9 +18,15 @@ import {AboutComponent}  from '../about/about.component';
 import {LoginComponent}  from '../login/login.component';
 import {PostsComponent}  from '../posts/posts.component';
 import {PostDetailComponent}  from '../post-detail/post-detail.component';
+import {QuizzesComponent}  from '../quizzes/quizzes.component';
+import {QuizDetailComponent}  from '../quiz-detail/quiz-detail.component';
+import {QuizAddComponent}  from '../quiz-add/quiz-add.component';
+import {QuestionAddComponent}  from '../question-add/question-add.component';
 import {PostAddComponent}  from '../post-add/post-add.component';
 import {ProfileComponent} from '../profile/profile.component';
 import {RegisterComponent} from '../register/register.component';
+import {UsersComponent} from '../users/users.component';
+import {LoaderComponent} from '../loader/loader.component';
 
 import {AppComponent} from './app.component';
 
@@ -45,8 +53,21 @@ export const routes: Routes = [
         component: PostDetailComponent
     },
     {
-        path: 'add',
+        path: 'postadd',
         component: PostAddComponent, 
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'quizzes',
+        component: QuizzesComponent
+    },
+    {
+        path: 'quizdetail/:id',
+        component: QuizDetailComponent
+    },
+    {
+        path: 'quizadd',
+        component: QuizAddComponent,
         canActivate: [AuthGuard]
     },
     {
@@ -57,6 +78,11 @@ export const routes: Routes = [
     {
         path: 'register',
         component: RegisterComponent
+    },
+    {
+    	path: 'users',
+    	component: UsersComponent,
+    	canActivate: [AuthGuard]
     }
 ];
 
@@ -80,11 +106,20 @@ export const routes: Routes = [
         PostDetailComponent,
         PostAddComponent,
         ProfileComponent,
-        RegisterComponent
+        RegisterComponent,
+        UsersComponent,
+        QuizzesComponent,
+        QuizDetailComponent,
+        QuizAddComponent,
+        QuestionAddComponent,
+        LoaderComponent
     ],
     providers: [
-        AuthGuard
+        AuthGuard,
+        LoginService,
+        UserService
     ],
+    entryComponents: [QuestionAddComponent],
     bootstrap: [AppComponent]
 })
 export class AppModule {

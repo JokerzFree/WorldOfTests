@@ -3,7 +3,7 @@ package com.itibo.project.world_of_tests.entity;
 import java.io.Serializable;
 
 /**
- * Created by Andrew on 12.03.2017.
+ * Role Entity for creating or updating Role objects
  */
 public class RoleEntity implements Serializable{
     private Long id;

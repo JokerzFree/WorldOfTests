@@ -12,16 +12,20 @@ import {UserService}  from '../../services/user.service';
     ]
 })
 export class LoginComponent {
+    error: any;
+
     constructor(private router:Router, private loginService:LoginService, private userService:UserService) {
     }
 
     login(event: any, username: any, password: any) {
         event.preventDefault();
         this.loginService.login(username, password)
-            .subscribe(() => {
-                this.userService.setLastLoginTime().subscribe(()=>{}, this.handleError);
-                this.router.navigate(['/add']);
-            }, this.handleError);
+            .subscribe(
+                () => {
+                    this.userService.setLastLoginTime().subscribe(()=>{}, this.handleError);
+                    this.router.navigate(['/posts']);
+                }, 
+                (error) => this.handleError(error));
     }
 
     logout():void {
@@ -30,6 +34,6 @@ export class LoginComponent {
 
 
     handleError(error:any) {
-        console.log(error.status);
+        this.error = error;
     }
 }

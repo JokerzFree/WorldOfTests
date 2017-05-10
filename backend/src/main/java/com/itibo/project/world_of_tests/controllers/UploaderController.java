@@ -46,19 +46,21 @@ public class UploaderController {
         this.currentUser = currentUser;
     }
 
-    @RequestMapping(value = "/images/{filename:.+}", method = RequestMethod.GET)
-    public ResponseEntity<Resource> getImagePath(@PathVariable String filename) {
+    @RequestMapping(value = "/images/{id}/{filename:.+}", method = RequestMethod.GET)
+    public ResponseEntity<Resource> getImagePath(@PathVariable Long id, @PathVariable String filename) {
         try {
-            Resource loader = storageService.loadAsResource(filename);
+            User user = userService.findUser(id);
+            Resource loader = storageService.loadAsResource(user, filename);
             return new ResponseEntity<>(loader, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(value = "/quizes/{filename:.+}", method = RequestMethod.GET)
-    public ResponseEntity<Resource> getQuizPath(@PathVariable String filename) {
+    @RequestMapping(value = "/quizes/{id}/{filename:.+}", method = RequestMethod.GET)
+    public ResponseEntity<Resource> getQuizPath(@PathVariable Long id, @PathVariable String filename) {
         try {
+            User user = userService.findUser(id);
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream("upload-dir/"+filename));
             document.open();
@@ -69,17 +71,17 @@ public class UploaderController {
             //
             PdfPTable pdfTable = new PdfPTable(4);
             List<User> users = userService.findAll();
-            for (User user: users){
-                pdfTable.addCell(user.getUsername());
-                pdfTable.addCell(user.getEmail());
-                pdfTable.addCell(user.getName());
-                pdfTable.addCell(user.getBirthday().toString());
+            for (User u: users){
+                pdfTable.addCell(u.getUsername());
+                pdfTable.addCell(u.getEmail());
+                pdfTable.addCell(u.getName());
+                pdfTable.addCell(u.getBirthday().toString());
             }
             document.add(pdfTable);
             //
             document.close();
             //
-            Resource loader = storageService.loadAsResource(filename);
+            Resource loader = storageService.loadAsResource(user, filename);
             return new ResponseEntity<>(loader, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,17 +91,18 @@ public class UploaderController {
 
     @RequestMapping(value = "/images/upload", method = RequestMethod.POST)
     public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
-        String filename = buildFileName(file);
-        storageService.store(file, filename);
+        User user = currentUser.getCurrentUser();
+        String filename = buildFileName("avatar", file);
+        storageService.store(user, file, filename);
         userService.updateAvatar(currentUser.getCurrentUser(), filename);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    private String buildFileName(MultipartFile file){
+    private String buildFileName(String additional, MultipartFile file){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String[] fileNameParts = file.getOriginalFilename().split("\\.");
         String format = fileNameParts[fileNameParts.length-1];
-        return currentUser.getCurrentUser().getId()+"_"+timestamp.getTime()+"."+format;
+        return additional+"_"+timestamp.getTime()+"."+format;
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

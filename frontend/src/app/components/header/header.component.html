@@ -12,10 +12,10 @@
         <div class="collapse navbar-collapse" id="menu-header">
         	<ul class="nav navbar-nav navbar-left">
                 <li>
-                    <a [routerLink]="['/posts']">{{ "create" | translate }}</a>
+                    <a [routerLink]="['/quizadd']">{{ "create" | translate }}</a>
                 </li>
                 <li>
-                    <a [routerLink]="['/posts']">{{ "explore" | translate }}</a>
+                    <a [routerLink]="['/quizzes']">{{ "explore" | translate }}</a>
                 </li>
                 <li>
                     <a [routerLink]="['/about']">{{ "about" | translate }}</a>
@@ -23,8 +23,8 @@
                 <li>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ "admin" | translate }} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                    	<li><a [routerLink]="['/people']">{{ "people" | translate }}</a></li>
-                        <li><a [routerLink]="['/add']">{{ "new_post" | translate }}</a></li>
+                    	<li><a [routerLink]="['/users']">{{ "people" | translate }}</a></li>
+                        <li><a [routerLink]="['/postadd']">{{ "new_post" | translate }}</a></li>
                     </ul>
                 </li>
         	</ul>
@@ -37,10 +37,10 @@
                     </ul>
                 </li>
                 <li *ngIf="!isSignedIn">
-                    <a [routerLink]="['/register']"><span class="glyphicon glyphicon-user"></span>{{ "register" | translate }}</a>
+                    <a [routerLink]="['/register']"><span class="glyphicon glyphicon-user"></span> {{ "register" | translate }}</a>
                 </li>
                 <li *ngIf="!isSignedIn">
-                    <a [routerLink]="['/login']"><span class="glyphicon glyphicon-log-in"></span>{{ "login" | translate }}</a>
+                    <a [routerLink]="['/login']"><span class="glyphicon glyphicon-log-in"></span> {{ "login" | translate }}</a>
                 </li>
                 <li *ngIf="isSignedIn" class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ "profile" | translate }} <span class="caret"></span></a>

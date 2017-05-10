@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule}  from '@angular/platform-browser';
-import {PostsComponent} from './post-add.component';
+import {PostsComponent} from './posts.component';
 
 @NgModule({
     imports: [

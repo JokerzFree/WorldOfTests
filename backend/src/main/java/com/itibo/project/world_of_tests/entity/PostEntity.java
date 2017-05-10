@@ -2,6 +2,9 @@ package com.itibo.project.world_of_tests.entity;
 
 import java.io.Serializable;
 
+/**
+ * Post Entity for creating or updating Post objects
+ */
 public class PostEntity implements Serializable {
     private Long id;
     private String title;

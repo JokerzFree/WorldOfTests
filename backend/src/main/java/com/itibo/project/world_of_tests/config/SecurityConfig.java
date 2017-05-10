@@ -57,7 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/users/admin/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/users/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/uploads/**").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/api/uploads/**").permitAll();
+                .antMatchers(HttpMethod.GET, "/api/uploads/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/access/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/access/post-add").hasRole("ADMIN");
 
         http.addFilterBefore(
                 new StatelessLoginFilter("/api/login", tokenAuthenticationService, userService, authenticationManager()),

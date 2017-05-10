@@ -11,11 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService  {
@@ -66,7 +64,6 @@ public class UserServiceImpl implements UserService  {
     @Override
     public User findUser(Long id) {
         return userRepository.findOne(id);
-
     }
 
     @Override
@@ -87,14 +84,17 @@ public class UserServiceImpl implements UserService  {
     @Override
     public User createUser(UserEntity userEntity) {
         User user = toUserRole(userEntity);
+        Date defaultDate = Date.from(LocalDateTime.of(1970,1,1,1,0,0).atZone(ZoneId.systemDefault()).toInstant());
+        user.setLastLoginTime(defaultDate);
         user.setAvatar("none.png");
         return userRepository.save(user);
     }
 
     private User toUserRole(UserEntity userEntity) {
         User user = userEntity.toUser();
+        user.setRoles(new HashSet<Role>());
         Role role = roleRepository.findOneRoleByName("ROLE_USER");
-        user.setRole(role);
+        user.addRole(role);
         return user;
     }
 }

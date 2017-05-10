@@ -19,6 +19,10 @@ public class CurrentUser {
         this.userService = userService;
     }
 
+    /**
+     * Return user which try to access to server
+     * @return User object
+     */
     public User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userService.findUser(authentication.getName()).get();

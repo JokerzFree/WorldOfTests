@@ -3,12 +3,13 @@ package com.itibo.project.world_of_tests.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import com.itibo.project.world_of_tests.annotations.Info;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -18,18 +19,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-@Info(
-        classType = Info.ClassType.Model,
-        description = "User Model",
-        createdBy = "JokerZ",
-        lastModified = "21.03.2017"
-)
 @Entity
-@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = {"username"}))
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"}),
+                                            @UniqueConstraint(columnNames = {"email"})})
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -55,6 +51,7 @@ public class User implements UserDetails {
     @NotNull
     private String avatar;
 
+    @NotNull
     @Column(name = "lastLoginTime", columnDefinition="DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginTime;
@@ -132,22 +129,24 @@ public class User implements UserDetails {
         this.lastLoginTime = lastLoginTime;
     }
 
-    @JsonProperty("lastLoginTime")
-    public LocalDateTime getConvertedTime(){
-        LocalDateTime llt = LocalDateTime.ofInstant(lastLoginTime.toInstant(), ZoneId.systemDefault());
-        return llt;
-    }
-
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        Role userRoles = this.getRole();
+        Set<Role> userRoles = this.getRoles();
         if(userRoles != null) {
-            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRoles.getRolename());
-            authorities.add(authority);
+            for (Role userRole: userRoles){
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.getRolename());
+                authorities.add(authority);
+            }
         }
         return authorities;
+    }
+
+    @JsonProperty("lastLoginTime")
+    public LocalDateTime getConvertedTime(){
+        LocalDateTime llt = LocalDateTime.ofInstant(lastLoginTime.toInstant(), ZoneId.systemDefault());
+        return llt;
     }
 
     @Override
@@ -175,12 +174,12 @@ public class User implements UserDetails {
     }
 
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_roles",
             joinColumns        = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id",  referencedColumnName = "id")}
     )
-    private Role role;
+    private Set<Role> roles;
 
     @Override
     @JsonIgnore
@@ -195,22 +194,25 @@ public class User implements UserDetails {
             return Objects.equal(getId(), other.getId())
                     && Objects.equal(getUsername(), other.getUsername())
                     && Objects.equal(getPassword(), other.getPassword())
-                    && Objects.equal(getRole().getRolename(), other.getRole().getRolename())
-                    && Objects.equal(isEnabled(), other.isEnabled());
+                    && Objects.equal(getEmail(), other.getEmail());
         }
         return false;
     }
 
-    public Role getRole() {
-        return role;
+    public void addRole(Role role){
+        this.roles.add(role);
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getUsername(), getPassword(), getRole().getRolename(), isEnabled());
+        return Objects.hashCode(getId(), getUsername(), getPassword(), getEmail(), getRoles(), isEnabled());
     }
 }

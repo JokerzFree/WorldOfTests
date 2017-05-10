@@ -36,14 +36,14 @@ export class UploadService {
         });
     }
 
-	getImage(filename:String):Observable<any> {
-		return this.http.get(this.url + "/images/" + filename, {headers: this.prepareHeaders()})
+	getImage(user_id:Number, filename:String):Observable<any> {
+		return this.http.get(this.url + "/images/" + user_id + "/" + filename, {headers: this.prepareHeaders()})
 		  .map(this.extractUrl)
 		  .catch(this.handleError);
 	}
 
-	getPdf(filename:String):Observable<any> {
-		return this.http.get(this.url + "/quizes/" + filename, {headers: this.prepareHeaders()})
+	getPdf(user_id:Number, filename:String):Observable<any> {
+		return this.http.get(this.url + "/quizes/" + user_id + "/" + filename, {headers: this.prepareHeaders()})
 		  .map(this.extractUrl)
 		  .catch(this.handleError);
 	}

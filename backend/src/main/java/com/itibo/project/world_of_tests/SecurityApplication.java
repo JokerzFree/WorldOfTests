@@ -15,14 +15,4 @@ public class SecurityApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SecurityApplication.class, args);
 	}
-
-	/*
-	@Bean
-	CommandLineRunner init(StorageService storageService) {
-		return (args) -> {
-			storageService.deleteAll();
-			storageService.init();
-		};
-	}
-	*/
 }

@@ -25,7 +25,7 @@ public class Post implements Serializable {
     @Column(name = "subtitle")
     private String subtitle;
 
-    @Column(name = "content", length = 2000)
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "date", length = 50)
