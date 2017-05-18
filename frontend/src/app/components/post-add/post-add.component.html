@@ -1,5 +1,5 @@
-<div class="container">
-    <div *ngIf="loaded && access">
+<div access path="post-add" #access='access' class="container">
+    <div *ngIf="access.accessBool">
         <div *ngIf="post" [ngClass]="{hide: postAdded}">
             <article>
                 <div class="container">
@@ -64,7 +64,4 @@
             </div>
         </div>
     </div>
-
-    <loader *ngIf="!loaded"></loader>
-    <div *ngIf="loaded && !access">{{ errorMessage }}</div>
 </div>

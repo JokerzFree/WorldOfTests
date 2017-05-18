@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -82,6 +83,20 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
+    }
+
+    @Override
+    public boolean deleteFilesFromUserFolderByPrefix(User user, String prefix){
+        boolean success = true;
+        try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(getPathToUserFolder(user), prefix + "*")) {
+            for (final Path newDirectoryStreamItem : newDirectoryStream) {
+                Files.delete(newDirectoryStreamItem);
+            }
+        } catch (final Exception e) {
+            success = false;
+            e.printStackTrace();
+        }
+        return success;
     }
 
     @Override

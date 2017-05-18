@@ -93,6 +93,7 @@ public class UploaderController {
     public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
         User user = currentUser.getCurrentUser();
         String filename = buildFileName("avatar", file);
+        storageService.deleteFilesFromUserFolderByPrefix(user, "avatar");
         storageService.store(user, file, filename);
         userService.updateAvatar(currentUser.getCurrentUser(), filename);
         return new ResponseEntity(HttpStatus.OK);

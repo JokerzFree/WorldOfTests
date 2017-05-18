@@ -76,4 +76,12 @@ public interface StorageService {
      */
     void deleteAll();
 
+    /**
+     * Delete all files from specific folder what match a specific prefix
+     * @param user from which user folder delete files
+     * @param prefix which try to find inside folders
+     * @return boolean with success state
+     */
+    boolean deleteFilesFromUserFolderByPrefix(User user, String prefix);
+
 }

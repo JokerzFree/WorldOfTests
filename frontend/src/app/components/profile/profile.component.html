@@ -1,15 +1,124 @@
-<article *ngIf="user">
-	<div class="image-upload">
-	    <label for="avatar-input">
-	        <img src="{{ image }}"/>
-	    </label>
-	    <input id="avatar-input" type="file" (change)="update($event)" />
+<div *ngIf="user" class="col-md-12">
+	<div class="col-md-3 col-md-offset-1">
+		<div class="image-upload">
+			<label for="avatar-input">
+				<img class="img-circle" src="{{ image }}"/>
+			</label>
+			<input id="avatar-input" type="file" (change)="updateAvatar($event)" />
+		</div>
+		<h3>{{ user.username }}</h3>
 	</div>
-    <h1>{{ user.username }}</h1>
-    <h1>{{ user.email }}</h1>
-    <h1>{{ user.name }}</h1>
-    <h1>{{ user.birthday }}</h1>
-    <h1>Last login time: {{user.lastLoginTime.dayOfMonth}}.{{user.lastLoginTime.monthValue}}.{{user.lastLoginTime.year}} {{user.lastLoginTime.hour}}:{{user.lastLoginTime.minute}}</h1>
-</article>
+	<div class="col-md-5 col-md-offset-1">
+		<div *ngIf="state == 'profile'">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{ "profile-panel-profile" | translate }}</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<tr>
+							<td>{{ "profile-panel-username" | translate }}</td>
+							<td>{{ user.username }}</td>
+						</tr>
+						<tr>
+							<td>{{ "profile-panel-birthday" | translate }}</td>
+							<td>{{user.birthday.dayOfMonth}}.{{user.birthday.monthValue}}.{{user.birthday.year}} </td>
+						</tr>
+						<tr>
+							<td>{{ "profile-panel-lastlogin" | translate }}</td>
+							<td>{{user.lastLoginTime.dayOfMonth}}.{{user.lastLoginTime.monthValue}}.{{user.lastLoginTime.year}} {{user.lastLoginTime.hour}}:{{user.lastLoginTime.minute}}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading clearfix">
+					<div class="btn-group pull-right">
+						<button type="button" class="btn btn-warning btn-sm" (click)="state = 'changeEmail'">{{ "profile-btn-edit" | translate }}</button>
+					</div>
+					<span class="panel-title">{{ "profile-panel-email" | translate }}</span>
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<tr>
+							<td>{{ "profile-panel-email" | translate }}</td>
+							<td>{{ user.email }}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading clearfix">
+					<div class="btn-group pull-right">
+						<button type="button" class="btn btn-warning btn-sm" (click)="state = 'changePassword'">{{ "profile-btn-edit" | translate }}</button>
+					</div>
+					<span class="panel-title">{{ "profile-panel-password" | translate }}</span>
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<tr>
+							<td>{{ "profile-panel-password" | translate }}</td>
+							<td>***********</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{ "profile-panel-accounts" | translate }}</h3>
+				</div>
+				<div class="panel-body">
+				</div>
+			</div>
+		</div>
+		<div *ngIf="state == 'changeEmail'">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{ "profile-changeEmail-title" | translate }}</h3>
+				</div>
+				<div class="panel-body">
+		            <div class="form-group">
+		                <label for="email">{{ "email" | translate }}</label>
+		                <input type="text" id="email" name="email" class="form-control" ngModel #email="ngModel" required email/>
+		                <div *ngIf="email.errors && (email.dirty || email.touched)" class="alert alert-danger" role="alert">
+		                    <p *ngIf="email.errors?.required">{{ "error_email_required" | translate }}</p>
+		                    <p *ngIf="email.errors?.email">{{ "error_email_format" | translate }}</p>
+		                </div>
+		            </div>
+					<div class="btn-group pull-right">
+						<button type="button" class="btn btn-primary btn-sm" (click)="state = 'profile'">{{ "profile-btn-back" | translate }}</button>
+						<button type="button" class="btn btn-success btn-sm" [disabled]="email.errors" (click)="updateEmail(email.value)">{{ "profile-btn-save" | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div *ngIf="state == 'changePassword'">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{ "profile-changePassword-title" | translate }}</h3>
+				</div>
+				<div class="panel-body">
+		            <div class="form-group">
+		                <label for="password">{{ "password" | translate }}</label>
+		                <input type="password" ngModel id="password" name="password" class="form-control" #password="ngModel" [rangeLength]="[8, 18]" required/>
+		                <div *ngIf="password.errors && (password.dirty || password.touched)" class="alert alert-danger" role="alert">
+		                    <p *ngIf="password.errors?.required">{{ "error_password_required" | translate }}</p>
+		                    <p *ngIf="password.errors?.rangeLength">{{ "error_range" | translate }}: 8 (18)</p>
+		                </div>
+		                <label for="certainPassword">{{ "confirm_password" | translate }}</label>
+		                <input type="password" ngModel id="certainPassword" name="certainPassword" class="form-control" #certainPassword="ngModel" [equalTo]="password" required />
+		                <div *ngIf="certainPassword.errors && (certainPassword.dirty || certainPassword.touched)" class="alert alert-danger" role="alert">
+		                    <p *ngIf="certainPassword.errors?.equalTo">{{ "error_password_missmatch" | translate }}</p>
+		                </div>
+		            </div>
+					<div class="btn-group pull-right">
+						<button type="button" class="btn btn-primary btn-sm" (click)="state = 'profile'">{{ "profile-btn-back" | translate }}</button>
+						<button type="button" class="btn btn-success btn-sm" [disabled]="password.errors && certainPassword.errors" (click)="updatePassword(password.value)">{{ "profile-btn-save" | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div> 
+	</div>
+</div>
 
 

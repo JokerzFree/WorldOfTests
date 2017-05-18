@@ -104,6 +104,7 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    @JsonIgnore
     public Date getBirthday() {
         return birthday;
     }
@@ -144,9 +145,13 @@ public class User implements UserDetails {
     }
 
     @JsonProperty("lastLoginTime")
-    public LocalDateTime getConvertedTime(){
-        LocalDateTime llt = LocalDateTime.ofInstant(lastLoginTime.toInstant(), ZoneId.systemDefault());
-        return llt;
+    public LocalDateTime getConvertedLastLogin(){
+        return LocalDateTime.ofInstant(lastLoginTime.toInstant(), ZoneId.systemDefault());
+    }
+
+    @JsonProperty("birthday")
+    public LocalDate getConvertedBirthday(){
+        return LocalDate.from(birthday.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
     }
 
     @Override
@@ -213,6 +218,6 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getUsername(), getPassword(), getEmail(), getRoles(), isEnabled());
+        return Objects.hashCode(getId(), getUsername(), getPassword(), getEmail(), isEnabled());
     }
 }

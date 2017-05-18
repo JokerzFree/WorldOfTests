@@ -1,6 +1,8 @@
 package com.itibo.project.world_of_tests.service;
 
 import com.itibo.project.world_of_tests.entity.UserEntity;
+import com.itibo.project.world_of_tests.exceptions.EmailException;
+import com.itibo.project.world_of_tests.exceptions.PasswordException;
 import com.itibo.project.world_of_tests.model.Role;
 import com.itibo.project.world_of_tests.model.User;
 import com.itibo.project.world_of_tests.repository.RoleRepository;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -52,6 +56,26 @@ public class UserServiceImpl implements UserService  {
     @Override
     public User updateAvatar(User user, String avatar){
         user.setAvatar(avatar);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateEmail(User user, String email){
+        user.setEmail(email);
+        try {
+            userRepository.save(user);
+        } catch (Exception ex){
+            throw new EmailException("Email verification failed");
+        }
+        return user;
+    }
+
+    @Override
+    public User updatePassword(User user, String password){
+        if (BCrypt.checkpw(password, user.getPassword())){
+            throw new PasswordException("User password not should be equal to old one");
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(password));
         return userRepository.save(user);
     }
 

@@ -2,6 +2,8 @@ package com.itibo.project.world_of_tests.controllers;
 
 import com.itibo.project.world_of_tests.annotations.Info;
 import com.itibo.project.world_of_tests.entity.UserEntity;
+import com.itibo.project.world_of_tests.exceptions.EmailException;
+import com.itibo.project.world_of_tests.exceptions.PasswordException;
 import com.itibo.project.world_of_tests.helpers.CurrentUser;
 import com.itibo.project.world_of_tests.model.User;
 import com.itibo.project.world_of_tests.repository.UserRepository;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sun.security.util.Password;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -47,7 +50,8 @@ public class UserController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.findUser(id);
-        user.getConvertedTime();
+        user.getConvertedLastLogin();
+        user.getConvertedBirthday();
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -60,6 +64,20 @@ public class UserController {
     public ResponseEntity<User> update(@Valid @RequestBody UserEntity params) {
         User user = currentUser.getCurrentUser();
         userService.update(user, params);
+        return new ResponseEntity<>(currentUser.getCurrentUser(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateEmail", method = RequestMethod.POST)
+    public ResponseEntity<User> updateEmail(@RequestBody Map<String, String> params){
+        User user = currentUser.getCurrentUser();
+        userService.updateEmail(user, params.get("email"));
+        return new ResponseEntity<>(currentUser.getCurrentUser(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+    public ResponseEntity<User> updatePassword(@RequestBody Map<String, String> params){
+        User user = currentUser.getCurrentUser();
+        userService.updatePassword(user, params.get("password"));
         return new ResponseEntity<>(currentUser.getCurrentUser(), HttpStatus.OK);
     }
 
@@ -80,8 +98,11 @@ public class UserController {
 
     @RequestMapping(value = "/admin/deleteUser/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
         HttpHeaders headers = new HttpHeaders();
+        if (currentUser.getCurrentUser().getId().equals(id)){
+            return new ResponseEntity(headers, HttpStatus.CONFLICT);
+        }
+        userService.deleteUser(id);
         return new ResponseEntity(headers, HttpStatus.OK);
     }
 

@@ -6,7 +6,6 @@ export class User {
     password:string;
     email:string;
     name:string;
-    birthday:string;
     roles: Role[];
     avatar:string;
 }

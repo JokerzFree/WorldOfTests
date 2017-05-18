@@ -34,6 +34,22 @@ public interface UserService extends org.springframework.security.core.userdetai
     User updateAvatar(User user, String avatar);
 
     /**
+     * Update User Email
+     * @param user which email would be updated
+     * @param email new email
+     * @return Changed User object
+     */
+    User updateEmail(User user, String email);
+
+    /**
+     * Update User Password
+     * @param user which password would be updated
+     * @param password new password
+     * @return Changed User object
+     */
+    User updatePassword(User user, String password);
+
+    /**
      * Update when User was logged last time
      *
      * @param user           which updated

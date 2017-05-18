@@ -14,8 +14,6 @@ import {Post} from "../../models/post";
 export class PostAddComponent implements OnInit {
 
     @Input() post:Post;
-    loaded:boolean;
-    access:boolean;
     errorMessage:any;
     postAdded:boolean;
     data:string;
@@ -25,22 +23,7 @@ export class PostAddComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.checkAccess();
-    }
-
-    checkAccess(){
-        this.accessService.getAccess('post-add').subscribe(
-                access => {
-                    this.loaded = true;
-                    this.access = true;
-                    this.post = new Post();
-                },
-                error => {
-                    this.loaded = true;
-                    this.access = false;
-                    this.errorMessage = <any> error;
-                }
-            )
+        this.post = new Post();
     }
 
     save() {
