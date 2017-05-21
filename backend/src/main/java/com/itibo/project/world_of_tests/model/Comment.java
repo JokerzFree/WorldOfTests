@@ -1,6 +1,9 @@
 package com.itibo.project.world_of_tests.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -13,9 +16,13 @@ public class Comment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "author")
     private String author;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "review")
     private String review;
 

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itibo.project.world_of_tests.repository.UserRepository;
 import com.itibo.project.world_of_tests.service.UserService;
 import com.itibo.project.world_of_tests.service.UserServiceImpl;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -19,12 +21,18 @@ public class Post implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "title")
     private String title;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "subtitle")
     private String subtitle;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 

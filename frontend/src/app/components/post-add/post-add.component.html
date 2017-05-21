@@ -8,7 +8,10 @@
                             <label style="font-size: xx-large">{{ "title" | translate }}:</label>
                         </div>
                         <div class="col-lg-8 col-lg-offset-1">
-                            <input [(ngModel)]="post.title" placeholder='{{ "title" | translate }}' class="form-control input-lg"/>
+                            <input [(ngModel)]="post.title" #title="ngModel" required placeholder='{{ "title" | translate }}' class="form-control input-lg"/>
+                            <div *ngIf="title.errors && (title.dirty || title.touched)" class="alert alert-danger" role="alert">
+                                <p *ngIf="title.errors?.required">{{ "error_title_required" | translate }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -21,7 +24,10 @@
                             <label style="font-size: xx-large">{{ "subtitle" | translate }}:</label>
                         </div>
                         <div class="col-lg-8 col-lg-offset-1">
-                            <input [(ngModel)]="post.subtitle" placeholder='{{ "subtitle" | translate }}' class="form-control input-lg"/>
+                            <input [(ngModel)]="post.subtitle" #subtitle="ngModel" required="" placeholder='{{ "subtitle" | translate }}' class="form-control input-lg"/>
+                            <div *ngIf="subtitle.errors && (subtitle.dirty || subtitle.touched)" class="alert alert-danger" role="alert">
+                                <p *ngIf="subtitle.errors?.required">{{ "error_subtitle_required" | translate }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -36,9 +42,14 @@
                         <div class="col-lg-8 col-lg-offset-1">
                             <ckeditor
                                 [(ngModel)]="post.content"
+                                #content="ngModel"
+                                required
                                 [config]="{toolbar:'Basic'}"
                                 debounce="500">
                             </ckeditor>
+                            <div *ngIf="content.errors && (content.dirty || content.touched)" class="alert alert-danger" role="alert">
+                                <p *ngIf="content.errors?.required">{{ "error_content_required" | translate }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -47,7 +58,7 @@
             <article>
             <div class="row">
                 <div class="col-md-4 col-md-offset-8">
-                    <button (click)="save()" type="button" class="btn btn-success btn-lg">{{ "save" | translate }}</button>
+                    <button (click)="save()" type="button" [disabled]="title.errors || subtitle.errors || content.errors" class="btn btn-success btn-lg">{{ "save" | translate }}</button>
                     <button [routerLink]="['../posts']" type="button" class="btn btn-primary btn-lg">{{ "posts" | translate }}</button>
                 </div>
             </div>
@@ -56,8 +67,8 @@
         </div>
 
         <div [ngClass]="{hide: !postAdded}">
-            <div class="col-lg-8 col-lg-offset-3 col-md-10 col-md-offset-1">
-                <div class="col-lg-4 col-lg-offset-2">
+            <div class="col-md-10 col-md-offset-2">
+                <div class="col-md-10">
                     <h1>{{ "post_success" | translate }}</h1>
                     <button [routerLink]="['../posts']" type="button" class="btn btn-primary btn-lg">{{ "posts" | translate }}</button>
                 </div>

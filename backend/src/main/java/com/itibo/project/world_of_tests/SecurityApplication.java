@@ -1,12 +1,9 @@
 package com.itibo.project.world_of_tests;
 
-import com.itibo.project.world_of_tests.storage.StorageProperties;
-import com.itibo.project.world_of_tests.storage.StorageService;
-import org.springframework.boot.CommandLineRunner;
+import com.itibo.project.world_of_tests.properties.StorageProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)

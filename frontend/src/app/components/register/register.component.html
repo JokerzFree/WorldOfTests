@@ -48,7 +48,7 @@
                     <p *ngIf="birthday.errors?.date">{{ "error_date" | translate }}</p>
                 </div>
             </div>
-            <button type="submit" class="btn btn-lg btn-primary">{{ "confirm" | translate }}</button>
+            <button type="submit" [disabled]="username.errors || email.errors || password.errors || certainPassword.errors || name.errors || birthday.errors" class="btn btn-lg btn-primary">{{ "confirm" | translate }}</button>
         </form>
     </div>
 </div>

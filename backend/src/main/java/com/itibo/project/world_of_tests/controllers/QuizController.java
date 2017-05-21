@@ -5,14 +5,17 @@ import com.itibo.project.world_of_tests.entity.QuizEntity;
 import com.itibo.project.world_of_tests.helpers.CurrentUser;
 import com.itibo.project.world_of_tests.model.Post;
 import com.itibo.project.world_of_tests.model.Quiz;
+import com.itibo.project.world_of_tests.model.User;
 import com.itibo.project.world_of_tests.service.PostService;
 import com.itibo.project.world_of_tests.service.QuizService;
+import com.itibo.project.world_of_tests.service.StorageService;
 import com.itibo.project.world_of_tests.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +28,13 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class QuizController {
     private final QuizService quizService;
+    private final StorageService storageService;
     private final CurrentUser currentUser;
 
     @Autowired
-    public QuizController(QuizService quizService, CurrentUser currentUser){
+    public QuizController(QuizService quizService, StorageService storageService, CurrentUser currentUser){
         this.quizService = quizService;
+        this.storageService = storageService;
         this.currentUser = currentUser;
     }
 
@@ -47,8 +52,13 @@ public class QuizController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> addNewQuiz(@RequestBody QuizEntity quizEntity) {
+        User user = currentUser.getCurrentUser();
         Quiz quiz = toQuiz(quizEntity);
-        quizService.save(quiz);
+        quiz = quizService.save(quiz);
+        Path quizFolder = storageService.initFolder(storageService.getPathToUserFolder(user).resolve("Quiz_" + quiz.getId()));
+        if (quizEntity.getFilenames() != null && quizEntity.getFilenames().length > 0) {
+            storageService.moveFiles(quizEntity.getFilenames(), storageService.getPathToTempFolder(), quizFolder);
+        }
         return new ResponseEntity<>(quizEntity.getTitle(), HttpStatus.CREATED);
     }
 
@@ -72,6 +82,7 @@ public class QuizController {
         quiz.setAuthor(currentUser.getCurrentUser());
         quiz.setJson_quiz(quizEntity.getJson_quiz());
         quiz.setJson_answer(quizEntity.getJson_answer());
+        quiz.setImage(quizEntity.getImage());
         return quiz;
     }
 }

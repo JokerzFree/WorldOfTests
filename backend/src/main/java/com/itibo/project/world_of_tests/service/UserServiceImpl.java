@@ -1,8 +1,7 @@
 package com.itibo.project.world_of_tests.service;
 
 import com.itibo.project.world_of_tests.entity.UserEntity;
-import com.itibo.project.world_of_tests.exceptions.EmailException;
-import com.itibo.project.world_of_tests.exceptions.PasswordException;
+import com.itibo.project.world_of_tests.exceptions.UserExceptions.*;
 import com.itibo.project.world_of_tests.model.Role;
 import com.itibo.project.world_of_tests.model.User;
 import com.itibo.project.world_of_tests.repository.RoleRepository;
@@ -15,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -46,17 +46,23 @@ public class UserServiceImpl implements UserService  {
 
     @Override
     public User update(User user, UserEntity params) {
-        params.getEmail().ifPresent(user::setUsername);
-        params.getEncodedPassword().ifPresent(user::setPassword);
-        params.getName().ifPresent(user::setName);
-        params.getAvatar().ifPresent(user::setAvatar);
-        return userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (Exception ex){
+            throw new UserUpdateException("Cannot update user information");
+        }
+        return user;
     }
 
     @Override
     public User updateAvatar(User user, String avatar){
         user.setAvatar(avatar);
-        return userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (Exception ex){
+            throw new UserAvatarException("Cannot update user avatar");
+        }
+        return user;
     }
 
     @Override
@@ -65,7 +71,7 @@ public class UserServiceImpl implements UserService  {
         try {
             userRepository.save(user);
         } catch (Exception ex){
-            throw new EmailException("Email verification failed");
+            throw new UserEmailException("User with this email already exists");
         }
         return user;
     }
@@ -73,7 +79,7 @@ public class UserServiceImpl implements UserService  {
     @Override
     public User updatePassword(User user, String password){
         if (BCrypt.checkpw(password, user.getPassword())){
-            throw new PasswordException("User password not should be equal to old one");
+            throw new UserPasswordException("User password not should be equal to old one");
         }
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         return userRepository.save(user);
@@ -111,7 +117,12 @@ public class UserServiceImpl implements UserService  {
         Date defaultDate = Date.from(LocalDateTime.of(1970,1,1,1,0,0).atZone(ZoneId.systemDefault()).toInstant());
         user.setLastLoginTime(defaultDate);
         user.setAvatar("none.png");
-        return userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (Exception ex){
+            throw new UserRegisterException("User with same name or email already exists");
+        }
+        return user;
     }
 
     private User toUserRole(UserEntity userEntity) {

@@ -5,26 +5,22 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itibo.project.world_of_tests.entity.UserEntity;
 import com.itibo.project.world_of_tests.helpers.CurrentUser;
+import com.itibo.project.world_of_tests.helpers.StringLibrary;
+import com.itibo.project.world_of_tests.model.Quiz;
 import com.itibo.project.world_of_tests.model.User;
+import com.itibo.project.world_of_tests.service.QuizService;
 import com.itibo.project.world_of_tests.service.UserService;
-import com.itibo.project.world_of_tests.storage.StorageFileNotFoundException;
-import com.itibo.project.world_of_tests.storage.StorageService;
-import com.lowagie.text.pdf.PdfTable;
+import com.itibo.project.world_of_tests.exceptions.StorageExceptions.StorageFileNotFoundException;
+import com.itibo.project.world_of_tests.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -37,51 +33,34 @@ import java.util.*;
 public class UploaderController {
     private final StorageService storageService;
     private final UserService userService;
+    private final QuizService quizService;
     private final CurrentUser currentUser;
 
     @Autowired
-    public UploaderController(StorageService storageService, UserService userService, CurrentUser currentUser) {
+    public UploaderController(StorageService storageService, UserService userService, QuizService quizService, CurrentUser currentUser) {
         this.storageService = storageService;
         this.userService = userService;
+        this.quizService = quizService;
         this.currentUser = currentUser;
     }
 
-    @RequestMapping(value = "/images/{id}/{filename:.+}", method = RequestMethod.GET)
-    public ResponseEntity<Resource> getImagePath(@PathVariable Long id, @PathVariable String filename) {
+    @RequestMapping(value = "/userFiles/{id}/{filename:.+}", method = RequestMethod.GET)
+    public ResponseEntity<Resource> getUserFile(@PathVariable Long id, @PathVariable String filename) {
         try {
             User user = userService.findUser(id);
-            Resource loader = storageService.loadAsResource(user, filename);
+            Resource loader = storageService.loadFromUserFolder(user, filename);
             return new ResponseEntity<>(loader, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(value = "/quizes/{id}/{filename:.+}", method = RequestMethod.GET)
-    public ResponseEntity<Resource> getQuizPath(@PathVariable Long id, @PathVariable String filename) {
+    @RequestMapping(value = "/quizFiles/{id}/{filename:.+}", method = RequestMethod.GET)
+    public ResponseEntity<Resource> getQuizFile(@PathVariable Long id, @PathVariable String filename) {
         try {
-            User user = userService.findUser(id);
-            Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream("upload-dir/"+filename));
-            document.open();
-            // Left
-            Paragraph paragraph = new Paragraph("iText PDF Sample");
-            paragraph.setAlignment(Element.ALIGN_CENTER);
-            document.add(paragraph);
-            //
-            PdfPTable pdfTable = new PdfPTable(4);
-            List<User> users = userService.findAll();
-            for (User u: users){
-                pdfTable.addCell(u.getUsername());
-                pdfTable.addCell(u.getEmail());
-                pdfTable.addCell(u.getName());
-                pdfTable.addCell(u.getBirthday().toString());
-            }
-            document.add(pdfTable);
-            //
-            document.close();
-            //
-            Resource loader = storageService.loadAsResource(user, filename);
+            Quiz quiz = quizService.findOneQuizById(id);
+            User user = quiz.getAuthor();
+            Resource loader = storageService.loadFromQuizFolder(user, quiz, filename);
             return new ResponseEntity<>(loader, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,21 +68,21 @@ public class UploaderController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/images/upload", method = RequestMethod.POST)
-    public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
+    @RequestMapping(value = "/files/upload", method = RequestMethod.POST)
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
         User user = currentUser.getCurrentUser();
-        String filename = buildFileName("avatar", file);
-        storageService.deleteFilesFromUserFolderByPrefix(user, "avatar");
-        storageService.store(user, file, filename);
-        userService.updateAvatar(currentUser.getCurrentUser(), filename);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    private String buildFileName(String additional, MultipartFile file){
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String[] fileNameParts = file.getOriginalFilename().split("\\.");
-        String format = fileNameParts[fileNameParts.length-1];
-        return additional+"_"+timestamp.getTime()+"."+format;
+        String filename = StringLibrary.buildFileName(user, type, file);
+        switch (type){
+            case "avatar":
+                storageService.deleteFilesFromUserFolderByPrefix(user, type);
+                storageService.store(user, file, filename);
+                userService.updateAvatar(currentUser.getCurrentUser(), filename);
+                break;
+            case "quiz":
+                storageService.store(file, filename);
+                break;
+        }
+        return new ResponseEntity<>(filename, HttpStatus.OK);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

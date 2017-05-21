@@ -7,7 +7,7 @@ import {HeaderComponent} from './header.component';
     ],
     declarations: [
         HeaderComponent
-    ]
+    ],
     bootstrap: [HeaderComponent]
 })
 export class HeaderModule {}

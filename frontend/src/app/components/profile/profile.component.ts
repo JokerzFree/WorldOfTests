@@ -41,13 +41,14 @@ export class ProfileComponent implements OnInit {
     }
 
     updateAvatar(fileInput: any){
-        this.uploadService.uploadFile("", fileInput.target.files).then(
-            (result: any) => {
-                console.log(result);
-                this.loadInfo();
-            },  
-            (error: any) => this.errorHandler.showError(error)
-        );
+        if (fileInput.target.files && fileInput.target.files[0]) {
+            this.uploadService.uploadFile("", "avatar", fileInput.target.files).then(
+                (result: any) => {
+                    this.loadInfo();
+                },  
+                (error: any) => this.errorHandler.showError(error)
+            );
+        }
     }
 
     updateEmail(email:string){
@@ -74,10 +75,13 @@ export class ProfileComponent implements OnInit {
         this.userService.getCurrentUser().subscribe(
             user => {
                 this.user = user;
-                this.uploadService.getImage(this.user.id, this.user.avatar)
-                    .subscribe((file) => {
-                        this.image = file;
-                    });
+                this.uploadService.getUserFile(this.user.id, this.user.avatar)
+                    .subscribe(
+                        (file) => {
+                            this.image = file;
+                        },
+                        (error) => this.errorHandler.showError(error)
+                    );
             },
             error => this.errorHandler.showError(error)
         );

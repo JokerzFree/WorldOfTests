@@ -1,4 +1,4 @@
-package com.itibo.project.world_of_tests.storage;
+package com.itibo.project.world_of_tests.exceptions.StorageExceptions;
 
 public class StorageFileNotFoundException extends StorageException {
 

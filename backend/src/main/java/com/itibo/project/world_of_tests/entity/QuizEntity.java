@@ -13,12 +13,14 @@ public class QuizEntity implements Serializable {
     private Long author;
     private String json_quiz;
     private String json_answer;
+    private String image;
+    private String[] filenames;
 
     public QuizEntity() {
 
     }
 
-    public QuizEntity(Long id, String title, String description, String date, Long author, String json_quiz, String json_answer) {
+    public QuizEntity(Long id, String title, String description, String date, Long author, String json_quiz, String json_answer, String image, String[] filenames) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -26,6 +28,8 @@ public class QuizEntity implements Serializable {
         this.author = author;
         this.json_quiz = json_quiz;
         this.json_answer = json_answer;
+        this.image = image;
+        this.filenames = filenames;
     }
 
     public Long getId() {
@@ -82,5 +86,21 @@ public class QuizEntity implements Serializable {
 
     public void setJson_answer(String json_answer) {
         this.json_answer = json_answer;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String[] getFilenames() {
+        return filenames;
+    }
+
+    public void setFilenames(String[] filenames) {
+        this.filenames = filenames;
     }
 }

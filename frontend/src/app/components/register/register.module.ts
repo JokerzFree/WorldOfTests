@@ -8,7 +8,7 @@ import {RegisterComponent} from './register.component';
     ],
     declarations: [
         RegisterComponent
-    ]
+    ],
     bootstrap: [RegisterComponent]
 })
 export class RegisterModule {}

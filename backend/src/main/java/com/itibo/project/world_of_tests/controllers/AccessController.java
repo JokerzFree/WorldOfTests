@@ -1,10 +1,9 @@
 package com.itibo.project.world_of_tests.controllers;
 
 import com.itibo.project.world_of_tests.helpers.CurrentUser;
-import com.itibo.project.world_of_tests.model.Quiz;
 import com.itibo.project.world_of_tests.model.User;
 import com.itibo.project.world_of_tests.service.UserService;
-import com.itibo.project.world_of_tests.storage.StorageService;
+import com.itibo.project.world_of_tests.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

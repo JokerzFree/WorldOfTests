@@ -1,6 +1,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {PostService} from "../../services/post.service";
 import {AccessService} from "../../services/access.service";
+import {ErrorHandlerService}  from '../../services/error-handler.service';
 import {Post} from "../../models/post";
 
 @Component({
@@ -18,7 +19,9 @@ export class PostAddComponent implements OnInit {
     postAdded:boolean;
     data:string;
 
-    constructor(private postService:PostService, private accessService:AccessService) {
+    constructor(private postService:PostService,
+                private accessService:AccessService,
+                private errorHandler:ErrorHandlerService) {
         this.postAdded = false;
     }
 
@@ -28,7 +31,10 @@ export class PostAddComponent implements OnInit {
 
     save() {
         this.postService.save(this.post)
-            .subscribe(data => this.data = JSON.stringify(data));
+            .subscribe(
+                data => this.data = JSON.stringify(data),
+                error => this.errorHandler.showError(error)
+            );
         this.postAdded = true;
     }
 }

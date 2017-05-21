@@ -1,4 +1,4 @@
-package com.itibo.project.world_of_tests.storage;
+package com.itibo.project.world_of_tests.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -17,5 +17,4 @@ public class StorageProperties {
     public void setLocation(String location) {
         this.location = location;
     }
-
 }

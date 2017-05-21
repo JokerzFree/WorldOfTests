@@ -1,10 +1,10 @@
 <div *ngIf="user" class="col-md-12">
 	<div class="col-md-3 col-md-offset-1">
-		<div class="image-upload">
+		<div class="image-upload img-df">
 			<label for="avatar-input">
 				<img class="img-circle" src="{{ image }}"/>
 			</label>
-			<input id="avatar-input" type="file" (change)="updateAvatar($event)" />
+			<input id="avatar-input" type="file" accept="image/*" (change)="updateAvatar($event)" />
 		</div>
 		<h3>{{ user.username }}</h3>
 	</div>

@@ -1,9 +1,7 @@
 package com.itibo.project.world_of_tests.controllers;
 
-import com.itibo.project.world_of_tests.annotations.Info;
 import com.itibo.project.world_of_tests.entity.UserEntity;
-import com.itibo.project.world_of_tests.exceptions.EmailException;
-import com.itibo.project.world_of_tests.exceptions.PasswordException;
+import com.itibo.project.world_of_tests.exceptions.UserExceptions.UserDeleteException;
 import com.itibo.project.world_of_tests.helpers.CurrentUser;
 import com.itibo.project.world_of_tests.model.User;
 import com.itibo.project.world_of_tests.repository.UserRepository;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sun.security.util.Password;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -100,7 +97,7 @@ public class UserController {
     public ResponseEntity deleteUser(@PathVariable Long id) {
         HttpHeaders headers = new HttpHeaders();
         if (currentUser.getCurrentUser().getId().equals(id)){
-            return new ResponseEntity(headers, HttpStatus.CONFLICT);
+            throw new UserDeleteException("You cannot delete this user");
         }
         userService.deleteUser(id);
         return new ResponseEntity(headers, HttpStatus.OK);

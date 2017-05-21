@@ -28,7 +28,7 @@ public interface QuizService {
      *
      * @param quiz which would be saved
      */
-    void save(Quiz quiz);
+    Quiz save(Quiz quiz);
 
     /**
      * Delete Quiz from table by unique id

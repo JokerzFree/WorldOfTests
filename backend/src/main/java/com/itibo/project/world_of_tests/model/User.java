@@ -3,6 +3,8 @@ package com.itibo.project.world_of_tests.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import com.itibo.project.world_of_tests.properties.StorageProperties;
+import com.itibo.project.world_of_tests.service.StorageServiceImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

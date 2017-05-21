@@ -24,10 +24,12 @@ import java.util.*;
 @Transactional
 public class QuizServiceImpl implements QuizService {
     private QuizRepository quizRepository;
+    private StorageService storageService;
 
     @Autowired
-    public QuizServiceImpl(QuizRepository quizRepository){
+    public QuizServiceImpl(QuizRepository quizRepository, StorageService storageService){
         this.quizRepository = quizRepository;
+        this.storageService = storageService;
     }
 
     public List<Quiz> findAll() {
@@ -38,11 +40,13 @@ public class QuizServiceImpl implements QuizService {
         return quizRepository.findOneQuizById(id);
     }
 
-    public void save(Quiz quiz) {
-        quizRepository.save(quiz);
+    public Quiz save(Quiz quiz) {
+        return quizRepository.save(quiz);
     }
 
     public void deleteQuizById(Long id) {
+        Quiz quiz = quizRepository.getOne(id);
+        storageService.deleteQuizFolder(quiz.getAuthor(), quiz);
         quizRepository.delete(id);
     }
 

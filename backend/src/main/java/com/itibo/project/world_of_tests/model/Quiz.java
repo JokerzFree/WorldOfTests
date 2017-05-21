@@ -49,6 +49,9 @@ public class Quiz implements Serializable {
     @Column(name ="json_answer", columnDefinition = "JSON")
     private String json_answer;
 
+    @Column(name = "image")
+    private String image;
+
     @OneToMany
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private List<Comment> commentList;
@@ -57,7 +60,8 @@ public class Quiz implements Serializable {
 
     }
 
-    public Quiz(Long id, String title, String date, User author, List<Comment> commentList, String json_quiz, String json_answer){
+    public Quiz(Long id, String title, String date, User author, List<Comment> commentList,
+                String json_quiz, String json_answer, String image){
         this.id = id;
         this.title = title;
         this.date = date;
@@ -65,6 +69,7 @@ public class Quiz implements Serializable {
         this.commentList = commentList;
         this.json_quiz = json_quiz;
         this.json_answer = json_answer;
+        this.image = image;
     }
 
     public Long getId() {
@@ -130,6 +135,14 @@ public class Quiz implements Serializable {
     @JsonIgnore
     public void setJson_answer(String json_answer) {
         this.json_answer = json_answer;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
