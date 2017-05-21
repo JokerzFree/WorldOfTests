@@ -1,0 +1,100 @@
+<div class="container">
+    <div *ngIf="quiz" [ngClass]="{hide: quizAdded}">
+        <div class="image-upload img-df img-thumbnail mb-2">
+            <label for="quiz-image">
+                <img class="image" [src]="quiz.imageUrl" />
+            </label>
+            <input id="quiz-image" type="file" accept="image/*" (change)="addFile($event)" />
+        </div>
+        <div class="form-group">
+            <label for="quiz-title">{{ "quiz-add-title" | translate }}</label>
+            <input [(ngModel)]="quiz.title" #title="ngModel" required type="text" class="form-control" id="quiz-title" placeholder="{{ 'quiz-add-title' | translate }}">
+            <div *ngIf="title.errors && (title.dirty || title.touched)" class="alert alert-danger" role="alert">
+                <p *ngIf="title.errors?.required">{{ "error_title_required" | translate }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="quiz-description">{{ "quiz-add-description" | translate }}</label>
+            <input [(ngModel)]="quiz.description" #description="ngModel" required type="text" class="form-control" id="quiz-description" placeholder="{{ 'quiz-add-description' | translate }}">
+            <div *ngIf="description.errors && (description.dirty || description.touched)" class="alert alert-danger" role="alert">
+                <p *ngIf="description.errors?.required">{{ "error_description_required" | translate }}</p>
+            </div>
+        </div>
+        <div class="container text-left">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#settingsCollapse" aria-expanded="false" aria-controls="settingsCollapse">
+                {{ 'quiz-add-settings' | translate }}
+            </button>
+            <div class="collapse" id="settingsCollapse">
+                <div class="well col-md-4">
+                    <table class="table">
+                        <thead>
+                            <th>{{ "quiz-add-options" | translate }}</th>
+                            <th>{{ "quiz-add-values" | translate }}</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ "quiz-add-settings-allow-back" | translate }}</td>
+                                <td>
+                                    <label class="switch">
+                                      <input type="checkbox" [(ngModel)]="quiz.config.allowBack">
+                                      <div class="slider round"></div>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ "quiz-add-settings-duration" | translate }}</td>
+                                <td>
+                                    <input [(ngModel)]="quiz.config.duration" type="text" class="form-control" placeholder="{{ 'quiz-add-settings-duration' | translate }}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ "quiz-add-settings-shuffle-questions" | translate }}</td>
+                                <td>
+                                    <label class="switch">
+                                      <input type="checkbox" [(ngModel)]="quiz.config.shuffleQuestions">
+                                      <div class="slider round"></div>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ "quiz-add-settings-shuffle-options" | translate }}</td>
+                                <td>
+                                    <label class="switch">
+                                      <input type="checkbox" [(ngModel)]="quiz.config.shuffleOptions">
+                                      <div class="slider round"></div>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ "quiz-add-settings-show-pager" | translate }}</td>
+                                <td>
+                                    <label class="switch">
+                                      <input type="checkbox" [(ngModel)]="quiz.config.showPager">
+                                      <div class="slider round"></div>
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div #questions>
+        </div>
+        <div class="btn-float-group">
+            <button (click)="addQuestion()" type="button" class="btn btn-primary btn-circle-av"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            <br/>
+            <button class="btn btn-success btn-circle-av" type="button" [disabled]="title.errors || description.errors" (click)="confirmQuiz()"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+        </div>
+    </div>
+
+    <div [ngClass]="{hide: !quizAdded}">
+        <div class="col-md-10 col-md-offset-2">
+            <div class="col-md-10">
+                <h1>{{ "quiz-add-success" | translate }}</h1>
+                <button [routerLink]="['../quizzes']" type="button" class="btn btn-primary btn-lg">{{ "quizzes" | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<div access path="users" #access="access" class="container">
+	<div *ngIf="access.accessBool">
+		<div class="list-group" *ngFor="let user of users">
+			<a class="list-group-item clearfix">
+				<span class="pull-left">
+					{{ user.username }}
+				</span>
+				<span class="pull-right">
+					<span class="btn btn-xs btn-default" (click)="deleteUser(user.id)">
+						<span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</span>
+				</span>
+			</a>
+		</div>
+	</div>
+</div>

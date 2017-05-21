@@ -1,0 +1,33 @@
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>Page</h1>
+                    <hr class="small">
+                    <span class="subheading"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container" *ngFor="let quiz of quizzes">
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-preview">
+            <a (click)="gotoDetail(quiz)" style="cursor: hand">
+            <img *ngIf="quiz.imageUrl" class="img-df img-thumbnail" [src]="quiz.imageUrl" />
+            <h2 class="post-title">
+                {{quiz.title}}
+            </h2>
+            <h3 class="post-subtitle">
+                {{quiz.description}}
+            </h3>
+            </a>
+            <p class="post-meta">{{ "posted" | translate }} <a href="#">{{quiz.author.username}}</a>, {{quiz.date}}</p>
+        </div>
+        <hr>
+    </div>
+</div>
+</div>

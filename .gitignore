@@ -3,6 +3,7 @@ backend/backend.iml
 backend/target
 backend/upload-dir
 frontend/node_modules
+frontend/.awcache
 
 # Windows image file caches
 Thumbs.db

@@ -1,0 +1,239 @@
+/* ADD STYLE FOR CENTER BASED ORINTIER */
+.pull-center{
+	float: inherit;
+}
+
+/*AVATAR UPLOAD VIEW*/
+.img-sm
+{
+	height: 100px;
+}
+.img-df
+{
+  height: 150px;
+}
+.img-lg
+{
+  height: 350px;
+}
+.image-upload > input
+{
+    display: none;
+}
+
+.image-upload label
+{
+	display: initial;
+}
+
+.image-upload img
+{
+    height: 100%;
+    cursor: pointer;
+}
+
+.panel-body{
+  padding: 7px 15px 7px 15px !important;
+}
+
+
+/*STICK FOOTER FIX*/
+body {
+  margin-bottom: 30px;
+}
+
+.footer {
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  background-color: #f5f5f5;
+}
+
+hr{
+    border:none;
+    border-top:1px solid #ddd;
+    background:none;
+    margin:8px 0;
+}
+
+.vr{
+  border: none;
+  border-right: 1px solid #656565;
+  background: none;
+  margin: 5px;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+    
+div.review{
+    text-align:center;
+}
+div.review > div {
+    cursor:pointer;
+}
+
+.answered {
+    background-color:#ccffcc;
+    border:1px solid #aaeeaa;
+    margin:2px 0;
+    padding:12px;
+}
+
+.not-answered {
+    background-color:#ffcccc;
+    border:1px solid #eeaaaa;
+    margin:2px 0;
+    padding:12px;
+}
+
+.result-question{
+    background-color:#eee;
+    margin:4px;
+    padding:6px;
+}
+
+.btn-circle {
+  width: 68px;
+  height: 68px;
+  line-height: 68px;
+  font-size: 25px;
+  padding:0;
+  border-radius: 50%;
+}
+
+
+.btn-circle-av {
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 20px;
+  padding:0;
+  border-radius: 50%;
+}
+
+.btn-circle-sm {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  font-size: 14px;
+  padding:0;
+  border-radius: 50%;
+}
+
+.btn-float-group {
+  position: fixed;
+  bottom: 85px;
+  right: 68px; 
+}
+
+.btn-float-group button {
+  margin-top: 5px;
+}
+
+.padding-top {
+  padding-top: 10px !important;
+}
+
+.padding-bottom {
+  padding-bottom: 10px !important;
+}
+
+.nopadding {
+  padding: 0 !important;
+}
+
+.nopadding-left {
+  padding-left: 0 !important;
+}
+
+.nopadding-right {
+  padding-right: 0 !important;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

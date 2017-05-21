@@ -1,0 +1,117 @@
+<div id="quiz">
+  <h1 class="text-sm-center text-primary">{{quiz?.title}}</h1>
+
+  <hr />
+
+  <div *ngIf="mode=='quiz' && quiz">
+    <div *ngIf="config.showPager" class="badge badge-info">
+      {{ "quiz-detail-question" | translate }} {{pager.index + 1}} {{ "quiz-detail-of" | translate }} {{pager.count}}.
+    </div>
+    <br/>
+    <div *ngIf="config.duration && config.duration != 0" class="badge badge-info">
+      {{ currentTimer }}
+    </div>
+    <br/>
+    <img *ngIf="currentQuestion.imageUrl" class="img-df img-thumbnail mt-2" [src]="currentQuestion.imageUrl" />
+    <h2>{{ currentQuestion.name }}</h2>
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8 text-left options">
+        <div *ngIf="currentQuestion.questionTypeId == 1">
+          <div class="col-md-12" *ngFor="let option of currentQuestion.options">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="checkbox">
+                  <label (change)="onRadioSelect(currentQuestion, option);">
+                    <input id="{{option.id}}" type="radio" value="{{option.id}}" [(ngModel)]="option.selected" />
+                    {{option.name}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="currentQuestion.questionTypeId == 2">
+          <div class="col-md-12" *ngFor="let option of currentQuestion.options">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="checkbox">
+                  <label (change)="onCheckSelect(currentQuestion, option);">
+                    <input id="{{option.id}}" type="checkbox" [(ngModel)]="option.selected" />
+                    {{option.name}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="currentQuestion.questionTypeId == 3">
+            <div class="col-md-12">
+              <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]="currentQuestion.answer" />
+              </div>
+            </div>
+        </div>
+        <div *ngIf="currentQuestion.questionTypeId == 4">
+          <div class="col-md-12">
+            <select class="form-control" (change)="onOneMenuSelect(currentQuestion, $event.target.value);">
+              <option value="0" disabled="true">{{ 'quiz-detail-one-menu-select-none' | translate }}</option>
+              <option *ngFor="let option of currentQuestion.options" value="{{option.id}}">
+                {{option.name}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="text-sm-center">
+      <button class="btn btn-default" *ngIf="config.allowBack" (click)="goTo(0);">{{ "quiz-detail-btn-first" | translate }}</button>
+      <button class="btn btn-default" *ngIf="config.allowBack && pager.index != 0" (click)="goTo(pager.index - 1);">{{ "quiz-detail-btn-prev" | translate }}</button>
+      <button class="btn btn-primary" *ngIf="pager.count != pager.index + 1" (click)="goToNext();">{{ "quiz-detail-btn-next" | translate }}</button>
+      <button class="btn btn-default" *ngIf="config.allowBack" (click)="goTo(pager.count - 1);">{{ "quiz-detail-btn-last" | translate }}</button>
+    </div>
+  </div>
+
+  <div class="row review" *ngIf="mode=='review' && quiz">
+    <div class="col-sm-4" *ngFor="let question of quiz.questions; let index = index;">
+      <div (click)="goTo(index)" class="{{ isAnswered(question) ? 'answered': 'not-answered' }}">{{index + 1}}. {{ isAnswered(question) ? 'Answered' : 'Not answered' }}</div>
+    </div>
+  </div>
+
+  <div class="result" *ngIf="mode=='result' && quiz">
+    <h2>Quiz Result</h2>
+    <div *ngFor="let question of quiz.questions; let index = index">
+      <div class="well">
+        <h4>{{index + 1}}. {{question.name}}</h4>
+        <div class="row" *ngIf="question.questionTypeId == 1">
+          <div class="col-md-6" *ngFor="let Option of question.options">
+            <input id="{{Option.id}}" type="radio" disabled="disabled" [(ngModel)]="Option.selected" /> {{Option.name}}
+          </div>
+        </div>
+        <div class="row" *ngIf="question.questionTypeId == 2">
+          <div class="col-md-6" *ngFor="let Option of question.options">
+            <input id="{{Option.id}}" type="checkbox" disabled="disabled" [(ngModel)]="Option.selected" /> {{Option.name}}
+          </div>
+        </div>
+        <div class="row" *ngIf="question.questionTypeId == 3">
+          <label>{{ question.answer }}</label>
+        </div>
+        <div class="row" *ngIf="question.questionTypeId == 4">
+          <div class="col-md-6" *ngFor="let Option of question.options">
+            <input id="{{Option.id}}" type="radio" disabled="disabled" [(ngModel)]="Option.selected" /> {{Option.name}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="alert {{ isCorrect() ? 'alert-success': 'alert-danger'}}">{{ "quiz-detail-answer-status" | translate }} {{isCorrect()}}.</div>
+  </div>
+
+  <hr />
+
+  <div *ngIf="mode!='result'">
+    <button class="btn btn-default" (click)="mode='quiz'">{{ "quiz-detail-mode-quiz" | translate }}</button>
+    <button class="btn btn-default" (click)="mode='review'">{{ "quiz-detail-mode-review" | translate }}</button>
+    <button class="btn btn-success" (click)="onSubmit();">{{ "quiz-detail-btn-submit" | translate }}</button>
+  </div>
+</div>
